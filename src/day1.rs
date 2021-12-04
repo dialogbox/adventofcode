@@ -1,6 +1,7 @@
 use super::input_lines;
 use std::collections::VecDeque;
 
+#[allow(dead_code)]
 pub fn part1(filename: &str) -> std::io::Result<i32> {
     let lines = input_lines(filename)?;
 
@@ -20,6 +21,7 @@ pub fn part1(filename: &str) -> std::io::Result<i32> {
     Ok(result)
 }
 
+#[allow(dead_code)]
 pub fn part2(filename: &str) -> std::io::Result<i32> {
     let mut lines = input_lines(filename)?;
 
