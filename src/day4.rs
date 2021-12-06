@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, fmt::Display};
+use std::fmt::Display;
 
 use super::input_lines;
 
@@ -106,7 +106,7 @@ impl Display for BingoBoard {
 
 #[allow(dead_code)]
 pub struct BingoGame {
-    draws: VecDeque<u16>,
+    draws: Vec<u16>,
     drawn: Vec<u16>,
     boards: Vec<BingoBoard>,
 }
@@ -122,7 +122,7 @@ impl BingoGame {
             .unwrap()
             .split(",")
             .map(|n_str| n_str.parse::<u16>().unwrap())
-            .collect::<VecDeque<_>>();
+            .collect::<Vec<_>>();
 
         let mut result = BingoGame {
             draws,
@@ -149,33 +149,58 @@ impl BingoGame {
         Ok(result)
     }
 
-    fn step(&mut self, next_draw: u16) -> Option<usize> {
-        // let next_draw = self.draws.pop_front().unwrap();
+    // mark all board with the given draw
+    // if there is a winner, returns the index of the winner
+    fn step(&mut self, next_draw: u16) -> Vec<usize> {
         self.drawn.push(next_draw);
+
+        let mut result: Vec<usize> = Vec::new();
 
         for (i, g) in self.boards.iter_mut().enumerate() {
             g.mark_draw(next_draw);
             if g.check_win() {
-                return Some(i);
+                result.push(i);
             }
         }
 
-        None
+        result
     }
 
     #[allow(dead_code)]
-    pub fn do_game(&mut self) -> Option<(u16, &BingoBoard)> {
-        let mut winner: Option<usize> = None;
+    pub fn do_game(&mut self) -> Option<(u16, usize)> {
+        let mut winner: Vec<usize> = Vec::new();
         let mut last_draw: u16 = 0;
         for i in 0..self.draws.len() {
             last_draw = self.draws[i];
             winner = self.step(last_draw);
-            if winner.is_some() {
+            if winner.len() > 0 {
                 break;
             }
         }
 
-        winner.map(|idx| (last_draw, &self.boards[idx]))
+        winner.first().map(|idx| (last_draw, *idx))
+    }
+
+    #[allow(dead_code)]
+    pub fn do_game_part2(&mut self) -> Option<(u16, usize)> {
+        let mut last_winner: Vec<usize> = Vec::new();
+        let mut last_draw: u16 = 0;
+
+        for i in 0..self.draws.len() {
+            last_draw = self.draws[i];
+            let winner = self.step(last_draw);
+            if winner.len() > 0 {
+                last_winner = winner;
+                if self.boards.len() <= last_winner.len() {
+                    break;
+                }
+                for i in last_winner.iter().rev() {
+                    self.boards.remove(*i);
+                }
+            }
+        }
+
+        last_winner.first().map(|idx| (last_draw, *idx))
     }
 }
 
@@ -202,7 +227,16 @@ mod tests {
         let winner = game.do_game().unwrap();
 
         println!("{}", winner.1);
-        println!("{}", winner.1.score(winner.0));
+        println!("{}", game.boards[winner.1].score(winner.0));
+    }
+
+    #[test]
+    fn test_do_game_part2() {
+        let mut game = BingoGame::from_input_file("inputs/day4.txt").unwrap();
+
+        let winner = game.do_game_part2().unwrap();
+
+        println!("{}", game.boards[winner.1].score(winner.0));
     }
 
     #[test]
