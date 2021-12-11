@@ -17,6 +17,7 @@ fn read_input(filename: &str) -> std::io::Result<[[u8; 10]; 10]> {
 
 #[allow(dead_code)]
 fn step(input: &mut [[u8; 10]; 10]) -> i32 {
+    // pad 1 additional edges to make it easier to test adjacents
     let mut c = [[0 as u8; 12]; 12];
 
     let mut result: i32 = 0;
@@ -26,8 +27,10 @@ fn step(input: &mut [[u8; 10]; 10]) -> i32 {
         }
     }
 
+    // ever flashed in this step
     let mut already_flash = [[false; 12]; 12];
     loop {
+        // newly flashed in this loop
         let mut new_flash = [[false; 12]; 12];
         for i in 1..=10 {
             for j in 1..=10 {
