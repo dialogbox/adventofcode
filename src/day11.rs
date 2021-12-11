@@ -47,6 +47,10 @@ fn step(input: &mut [[u8; 10]; 10]) -> i32 {
 
         for i in 1..=10 {
             for j in 1..=10 {
+                if already_flash[i][j] {
+                    continue;
+                }
+
                 let mut n_flash = 0;
                 // upper left
                 if new_flash[i - 1][j - 1] {
@@ -89,9 +93,6 @@ fn step(input: &mut [[u8; 10]; 10]) -> i32 {
     for i in 0..10 {
         for j in 0..10 {
             input[i][j] = c[i + 1][j + 1];
-            if already_flash[i + 1][j + 1] {
-                input[i][j] = 0;
-            }
         }
     }
 
