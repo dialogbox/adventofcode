@@ -1,4 +1,4 @@
-use std::cmp::{max, min};
+use std::cmp::max;
 
 use super::input_lines;
 
@@ -53,47 +53,36 @@ fn read_coord_input(filename: &str) -> std::io::Result<Vec<Vec<bool>>> {
 }
 
 #[allow(dead_code)]
-fn fold_x(map: Vec<Vec<bool>>, pos: usize) -> Vec<Vec<bool>> {
-    let prio_size = pos;
-    let later_size = map[0].len() - pos - 1;
+fn fold_x(mut map: Vec<Vec<bool>>) -> Vec<Vec<bool>> {
+    let pos = map[0].len() / 2;
+    for l in map.iter_mut() {
+        let mut later = l.split_off(pos + 1);
+        l.pop();
+        later.reverse();
 
-    let result_size = min(prio_size, later_size);
-
-    let mut result = vec![vec![false; result_size]; map.len()];
-
-    for i in 0..result.len() {
-        for j in 0..result_size {
-            result[i][result_size - j - 1] = map[i][pos - j - 1];
-            let o = &mut result[i][result_size - j - 1];
-            *o = map[i][pos + j + 1] || *o;
+        for (j, p) in l.iter_mut().enumerate() {
+            *p |= later[j];
         }
     }
 
-    result
+    map
 }
 
 #[allow(dead_code)]
-fn fold_y(map: Vec<Vec<bool>>, pos: usize) -> Vec<Vec<bool>> {
-    let prio_size = pos;
-    let later_size = map.len() - pos - 1;
+fn fold_y(map: Vec<Vec<bool>>) -> Vec<Vec<bool>> {
+    let mut prio = map;
+    let mut later = prio.split_off(prio.len() / 2);
+    // throw away the split line
+    prio.pop();
+    later.reverse();
 
-    let result_size = max(prio_size, later_size);
-
-    let mut result = vec![vec![false; map[0].len()]; result_size];
-
-    for i in 0..result_size {
-        for j in 0..result[0].len() {
-            if i < prio_size {
-                result[result_size - i - 1][j] = map[pos - i - 1][j];
-            }
-            if i < later_size {
-                let o = &mut result[result_size - i - 1][j];
-                *o = map[pos + i + 1][j] || *o;
-            }
+    for (i, l) in prio.iter_mut().enumerate() {
+        for (j, p) in l.iter_mut().enumerate() {
+            *p |= later[i][j];
         }
     }
 
-    result
+    prio
 }
 
 #[allow(dead_code)]
@@ -146,9 +135,9 @@ mod tests {
         let folds = read_folding_input("inputs/day13_test_fold.txt").unwrap();
 
         let result = if folds[0].0 == 'x' {
-            fold_x(map, folds[0].1)
+            fold_x(map)
         } else {
-            fold_y(map, folds[0].1)
+            fold_y(map)
         };
 
         print_status(&result);
@@ -165,9 +154,9 @@ mod tests {
         assert_eq!(n, 17);
 
         let result = if folds[1].0 == 'x' {
-            fold_x(result, folds[1].1)
+            fold_x(result)
         } else {
-            fold_y(result, folds[1].1)
+            fold_y(result)
         };
 
         print_status(&result);
@@ -179,9 +168,9 @@ mod tests {
         let folds = read_folding_input("inputs/day13_fold.txt").unwrap();
 
         let result = if folds[0].0 == 'x' {
-            fold_x(map, folds[0].1)
+            fold_x(map)
         } else {
-            fold_y(map, folds[0].1)
+            fold_y(map)
         };
 
         let mut n = 0;
@@ -205,9 +194,9 @@ mod tests {
 
         for f in folds {
             result = if f.0 == 'x' {
-                fold_x(result, f.1)
+                fold_x(result)
             } else {
-                fold_y(result, f.1)
+                fold_y(result)
             };
         }
 
