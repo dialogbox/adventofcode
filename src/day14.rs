@@ -2,6 +2,13 @@ use std::collections::HashMap;
 
 use super::input_lines;
 
+//
+// General idea here is instead of building concrate string, just maintain number of possible 2 char pairs
+// Everytime a rule is applied, all of the pairs in the string turned to two pairs of the same numbers
+// Ex)
+// HB -> K
+//
+// Which means if there were n numbers of "HB", it will be n "HK"s and n "KB"s.
 #[allow(dead_code)]
 fn read_input(filename: &str) -> std::io::Result<(String, HashMap<[char; 2], char>)> {
     let mut lines = input_lines(filename)?;
@@ -34,7 +41,7 @@ fn convert_rules(rules: &HashMap<[char; 2], char>) -> HashMap<[char; 2], [[char;
     result
 }
 
-fn convert_seeds(seed: &str) -> HashMap<[char; 2], u64> {
+fn convert_template(seed: &str) -> HashMap<[char; 2], u64> {
     let mut result: HashMap<[char; 2], u64> = HashMap::new();
 
     let mut chars = seed.chars();
@@ -53,28 +60,7 @@ fn convert_seeds(seed: &str) -> HashMap<[char; 2], u64> {
 }
 
 #[allow(dead_code)]
-fn step(rules: &HashMap<[char; 2], char>, seed: &str) -> String {
-    let mut chars = seed.chars();
-
-    let first = chars.next().unwrap();
-    let mut cur = [' ', first];
-    let mut result = vec![first];
-
-    for c in chars {
-        cur[0] = cur[1];
-        cur[1] = c;
-
-        let n = rules.get(&cur).unwrap();
-
-        result.push(*n);
-        result.push(c);
-    }
-
-    result.iter().collect()
-}
-
-#[allow(dead_code)]
-fn step_v2(
+fn step(
     rules: &HashMap<[char; 2], [[char; 2]; 2]>,
     mut seed: HashMap<[char; 2], u64>,
 ) -> HashMap<[char; 2], u64> {
@@ -96,10 +82,35 @@ fn step_v2(
     seed
 }
 
+#[allow(dead_code)]
+fn count_chars(pat_counts: &HashMap<[char; 2], u64>, initial_template: &str) -> HashMap<char, u64> {
+    let mut counts = HashMap::new();
+
+    // We do this because all chars are counted twice except the first and the last character of the input string.
+    // So +1 for the first/last char and devide by 2 for all the counts
+    *counts
+        .entry(initial_template.chars().next().unwrap())
+        .or_insert(0) += 1;
+    *counts
+        .entry(initial_template.chars().last().unwrap())
+        .or_insert(0) += 1;
+
+    for (pair, count) in pat_counts {
+        let orig = counts.entry(pair[0]).or_insert(0);
+        *orig += count;
+        let orig = counts.entry(pair[1]).or_insert(0);
+        *orig += count;
+    }
+
+    for c in counts.values_mut() {
+        *c /= 2;
+    }
+
+    counts
+}
+
 #[cfg(test)]
 mod tests {
-    use std::collections::BTreeMap;
-
     use super::*;
 
     #[test]
@@ -122,16 +133,15 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        let (mut tmpl, rules) = read_input("inputs/day14_test.txt").unwrap();
+        let (tmpl, rules) = read_input("inputs/day14_test.txt").unwrap();
+        let rules = convert_rules(&rules);
+        let mut seeds = convert_template(&tmpl);
 
         for _ in 0..10 {
-            tmpl = step(&rules, &tmpl);
+            seeds = step(&rules, seeds);
         }
 
-        let mut counts = BTreeMap::new();
-        for c in tmpl.chars() {
-            *counts.entry(c).or_insert(0) += 1;
-        }
+        let counts = count_chars(&seeds, &tmpl);
 
         let max = counts.iter().max_by_key(|&(_, count)| count).unwrap();
         let min = counts.iter().min_by_key(|&(_, count)| count).unwrap();
@@ -141,16 +151,15 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let (mut tmpl, rules) = read_input("inputs/day14.txt").unwrap();
+        let (tmpl, rules) = read_input("inputs/day14.txt").unwrap();
+        let rules = convert_rules(&rules);
+        let mut seeds = convert_template(&tmpl);
 
         for _ in 0..10 {
-            tmpl = step(&rules, &tmpl);
+            seeds = step(&rules, seeds);
         }
 
-        let mut counts = BTreeMap::new();
-        for c in tmpl.chars() {
-            *counts.entry(c).or_insert(0) += 1;
-        }
+        let counts = count_chars(&seeds, &tmpl);
 
         let max = counts.iter().max_by_key(|&(_, count)| count).unwrap();
         let min = counts.iter().min_by_key(|&(_, count)| count).unwrap();
@@ -159,56 +168,20 @@ mod tests {
     }
 
     #[test]
-    fn do_part1_v2() {
-        let (tmpl, rules) = read_input("inputs/day14.txt").unwrap();
-        let rules = convert_rules(&rules);
-        let mut seeds = convert_seeds(&tmpl);
-
-        for _ in 0..10 {
-            seeds = step_v2(&rules, seeds);
-        }
-
-        let mut counts = HashMap::new();
-        counts.insert(tmpl.chars().next().unwrap(), 1);
-        counts.insert(tmpl.chars().last().unwrap(), 1);
-
-        for (pair, count) in seeds {
-            let orig = counts.entry(pair[0]).or_insert(0);
-            *orig += count;
-            let orig = counts.entry(pair[1]).or_insert(0);
-            *orig += count;
-        }
-
-        let max = counts.iter().max_by_key(|&(_, count)| count).unwrap();
-        let min = counts.iter().min_by_key(|&(_, count)| count).unwrap();
-
-        assert_eq!(max.1 / 2 - min.1 / 2, 2549);
-    }
-
-    #[test]
     fn do_part2() {
         let (tmpl, rules) = read_input("inputs/day14.txt").unwrap();
         let rules = convert_rules(&rules);
-        let mut seeds = convert_seeds(&tmpl);
+        let mut seeds = convert_template(&tmpl);
 
         for _ in 0..40 {
-            seeds = step_v2(&rules, seeds);
+            seeds = step(&rules, seeds);
         }
 
-        let mut counts = HashMap::new();
-        counts.insert(tmpl.chars().next().unwrap(), 1);
-        counts.insert(tmpl.chars().last().unwrap(), 1);
-
-        for (pair, count) in seeds {
-            let orig = counts.entry(pair[0]).or_insert(0);
-            *orig += count;
-            let orig = counts.entry(pair[1]).or_insert(0);
-            *orig += count;
-        }
+        let counts = count_chars(&seeds, &tmpl);
 
         let max = counts.iter().max_by_key(|&(_, count)| count).unwrap();
         let min = counts.iter().min_by_key(|&(_, count)| count).unwrap();
 
-        assert_eq!(max.1 / 2 - min.1 / 2, 2516901104210);
+        assert_eq!(max.1 - min.1, 2516901104210);
     }
 }
