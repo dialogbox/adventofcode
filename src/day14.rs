@@ -31,6 +31,7 @@ fn read_input(filename: &str) -> std::io::Result<(String, HashMap<[char; 2], cha
     Ok((templ, result))
 }
 
+#[allow(dead_code)]
 fn convert_rules(rules: &HashMap<[char; 2], char>) -> HashMap<[char; 2], [[char; 2]; 2]> {
     let mut result = HashMap::new();
 
@@ -41,6 +42,7 @@ fn convert_rules(rules: &HashMap<[char; 2], char>) -> HashMap<[char; 2], [[char;
     result
 }
 
+#[allow(dead_code)]
 fn convert_template(seed: &str) -> HashMap<[char; 2], u64> {
     let mut result: HashMap<[char; 2], u64> = HashMap::new();
 
