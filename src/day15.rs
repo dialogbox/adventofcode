@@ -1,4 +1,4 @@
-use std::{cmp::min, fmt::Display};
+use std::{cmp::Ordering, collections::BinaryHeap, fmt::Display};
 
 use super::input_lines;
 
@@ -40,72 +40,110 @@ fn multiply_map(orig: Vec<Vec<u8>>, factor: usize) -> Vec<Vec<u8>> {
     result
 }
 
-fn visit(
-    map: &[Vec<u8>],
-    distance_map: &mut Vec<Vec<i32>>,
-    unvisited: &mut Vec<Vec<bool>>,
-    x: usize,
-    y: usize,
-) {
-    let width = map[0].len();
-    let height = map.len();
+#[derive(Clone, Eq, PartialEq)]
+struct State {
+    cost: usize,
+    position: (usize, usize),
+    path: Vec<(usize, usize)>,
+}
 
-    if !unvisited[y][x] {
-        return;
+// The priority queue depends on `Ord`.
+// Explicitly implement the trait so the queue becomes a min-heap
+// instead of a max-heap.
+impl Ord for State {
+    fn cmp(&self, other: &Self) -> Ordering {
+        // Notice that the we flip the ordering on costs.
+        // In case of a tie we compare positions - this step is necessary
+        // to make implementations of `PartialEq` and `Ord` consistent.
+        other
+            .cost
+            .cmp(&self.cost)
+            .then_with(|| self.position.cmp(&other.position))
     }
+}
 
-    let cur_dist = distance_map[y][x];
-
-    if x > 0 && unvisited[y][x - 1] {
-        distance_map[y][x - 1] = min(distance_map[y][x - 1], cur_dist + map[y][x - 1] as i32);
+// `PartialOrd` needs to be implemented as well.
+impl PartialOrd for State {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
     }
-    if x < width - 1 && unvisited[y][x + 1] {
-        distance_map[y][x + 1] = min(distance_map[y][x + 1], cur_dist + map[y][x + 1] as i32);
-    }
-    if y > 0 && unvisited[y - 1][x] {
-        distance_map[y - 1][x] = min(distance_map[y - 1][x], cur_dist + map[y - 1][x] as i32);
-    }
-    if y < height - 1 && unvisited[y + 1][x] {
-        distance_map[y + 1][x] = min(distance_map[y + 1][x], cur_dist + map[y + 1][x] as i32);
-    }
-
-    unvisited[y][x] = false;
 }
 
 #[allow(dead_code)]
-fn shortest_path(map: &[Vec<u8>]) -> Vec<Vec<i32>> {
+fn shortest_path(map: &[Vec<u8>]) -> Option<(usize, Vec<(usize, usize)>)> {
     let width = map[0].len();
     let height = map.len();
+    let goal = (width - 1, height - 1);
 
-    let mut distance_map = vec![vec![i32::MAX; width]; height];
-    distance_map[0][0] = 0;
+    let mut dist = vec![vec![usize::MAX; width]; height];
+    dist[0][0] = 0;
 
-    let mut risk = 0;
-    for _ in 0..10 {
-        let mut unvisited = vec![vec![true; width]; height];
-        for y in 0..height {
-            for x in 0..width {
-                visit(map, &mut distance_map, &mut unvisited, x, y);
+    let mut heap = BinaryHeap::new();
+    heap.push(State {
+        cost: 0,
+        position: (0, 0),
+        path: vec![(0, 0)],
+    });
+
+    while let Some(State {
+        cost,
+        position,
+        path,
+    }) = heap.pop()
+    {
+        // Alternatively we could have continued to find all shortest paths
+        if position == goal {
+            return Some((cost, path));
+        }
+
+        let (x, y) = position;
+
+        // Important as we may have already found a better way
+        if cost > dist[y][x] {
+            continue;
+        }
+
+        let mut adjacents = Vec::new();
+        // For each adjacent we can reach, see if we can find a way with
+        // a lower cost going through this node
+        if x > 0 {
+            // left
+            adjacents.push((x - 1, y));
+        }
+        if x < width - 1 {
+            // right
+            adjacents.push((x + 1, y));
+        }
+        if y > 0 {
+            // top
+            adjacents.push((x, y - 1));
+        }
+        if y < height - 1 {
+            // down
+            adjacents.push((x, y + 1));
+        }
+
+        for (next_x, next_y) in adjacents {
+            let mut next_path = path.clone();
+            next_path.push((next_x, next_y));
+
+            let next = State {
+                cost: cost + map[next_y][next_x] as usize,
+                position: (next_x, next_y),
+                path: next_path,
+            };
+
+            // If so, add it to the frontier and continue
+            if next.cost < dist[next_y][next_x] {
+                // Relaxation, we have now found a better way
+                dist[next_y][next_x] = next.cost;
+
+                heap.push(next);
             }
         }
-
-        let mut unvisited = vec![vec![true; width]; height];
-        for t_y in 0..height {
-            let y = height - 1 - t_y;
-            for t_x in 0..width {
-                let x = width - 1 - t_x;
-                visit(map, &mut distance_map, &mut unvisited, x, y);
-            }
-        }
-
-        if risk == distance_map[height - 1][width - 1] {
-            break;
-        }
-        risk = distance_map[height - 1][width - 1];
-        println!("Risk {}", risk);
     }
 
-    distance_map
+    None
 }
 
 #[allow(dead_code)]
@@ -149,27 +187,18 @@ mod test {
     fn test_part1() {
         let map = read_input("inputs/day15_test.txt").unwrap();
 
-        let result = shortest_path(&map);
+        let (cost, _path) = shortest_path(&map).unwrap();
 
-        print_map(&result);
-    }
-
-    #[test]
-    fn test_part1_2() {
-        let map = read_input("inputs/day15_test2.txt").unwrap();
-
-        let result = shortest_path(&map);
-
-        print_map(&result);
+        println!("{}", cost);
     }
 
     #[test]
     fn do_part1() {
         let map = read_input("inputs/day15.txt").unwrap();
 
-        let result = shortest_path(&map);
+        let (cost, _path) = shortest_path(&map).unwrap();
 
-        println!("{}", result[result.len() - 1][result[0].len() - 1]);
+        assert_eq!(cost, 720);
     }
 
     #[test]
@@ -177,9 +206,9 @@ mod test {
         let map = read_input("inputs/day15_test.txt").unwrap();
         let map = multiply_map(map, 5);
 
-        let result = shortest_path(&map);
+        let (cost, _path) = shortest_path(&map).unwrap();
 
-        println!("{}", result[result.len() - 1][result[0].len() - 1]);
+        assert_eq!(cost, 315);
     }
 
     #[test]
@@ -187,8 +216,8 @@ mod test {
         let map = read_input("inputs/day15.txt").unwrap();
         let map = multiply_map(map, 5);
 
-        let result = shortest_path(&map);
+        let (cost, _path) = shortest_path(&map).unwrap();
 
-        println!("{}", result[result.len() - 1][result[0].len() - 1]);
+        assert_eq!(cost, 3025);
     }
 }
