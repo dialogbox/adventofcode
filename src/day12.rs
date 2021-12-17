@@ -67,7 +67,7 @@ fn read_input(filename: &str) -> std::io::Result<HashMap<String, Rc<RefCell<Cave
 
     for l in lines {
         let l = l?;
-        let mut elems = l.split_terminator("-");
+        let mut elems = l.split('-');
         let from_str = elems.next().unwrap();
         let to_str = elems.next().unwrap();
 
@@ -98,15 +98,15 @@ fn read_input(filename: &str) -> std::io::Result<HashMap<String, Rc<RefCell<Cave
 }
 
 #[allow(dead_code)]
-fn find_next_paths<'a>(
-    map: &'a HashMap<String, Rc<RefCell<Cave>>>,
+fn find_next_paths(
+    map: &HashMap<String, Rc<RefCell<Cave>>>,
     start: Rc<RefCell<Cave>>,
-    parent_path: &Vec<String>,
+    parent_path: &[String],
     allowed_visit_for_smallcave: usize,
 ) -> Vec<Vec<String>> {
     let mut result = Vec::new();
 
-    let mut current_path = parent_path.clone();
+    let mut current_path = parent_path.to_vec();
     let inner_start = (*start).borrow();
     current_path.push(inner_start.name.to_string());
 
@@ -164,8 +164,8 @@ fn find_next_paths<'a>(
 }
 
 #[allow(dead_code)]
-fn find_paths<'a>(
-    map: &'a HashMap<String, Rc<RefCell<Cave>>>,
+fn find_paths(
+    map: &HashMap<String, Rc<RefCell<Cave>>>,
     allowed_visit_for_smallcave: usize,
 ) -> Vec<Vec<String>> {
     let start = map.get("start").unwrap();

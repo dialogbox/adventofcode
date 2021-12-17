@@ -20,8 +20,8 @@ impl BingoBoard {
             checked: [[false; BINGO_BOARD_ROWS]; BINGO_BOARD_COLS],
         };
 
-        for i in 0..BINGO_BOARD_ROWS {
-            for (j, n) in input[i].split_whitespace().enumerate() {
+        for (i, line) in input.iter().enumerate().take(BINGO_BOARD_ROWS) {
+            for (j, n) in line.split_whitespace().enumerate() {
                 result.board[i][j] = n.parse::<u16>().unwrap()
             }
         }
@@ -120,7 +120,7 @@ impl BingoGame {
             .next()
             .unwrap()
             .unwrap()
-            .split(",")
+            .split(',')
             .map(|n_str| n_str.parse::<u16>().unwrap())
             .collect::<Vec<_>>();
 
@@ -173,7 +173,7 @@ impl BingoGame {
         for i in 0..self.draws.len() {
             last_draw = self.draws[i];
             winner = self.step(last_draw);
-            if winner.len() > 0 {
+            if !winner.is_empty() {
                 break;
             }
         }
@@ -189,7 +189,7 @@ impl BingoGame {
         for i in 0..self.draws.len() {
             last_draw = self.draws[i];
             let winner = self.step(last_draw);
-            if winner.len() > 0 {
+            if !winner.is_empty() {
                 last_winner = winner;
                 if self.boards.len() <= last_winner.len() {
                     break;
@@ -216,7 +216,7 @@ mod tests {
         println!("{:?}", game.drawn);
         for b in game.boards {
             println!("{}", b);
-            println!("");
+            println!();
         }
     }
 

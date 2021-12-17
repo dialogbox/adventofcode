@@ -18,7 +18,7 @@ fn read_input(filename: &str) -> std::io::Result<[[u8; 10]; 10]> {
 #[allow(dead_code)]
 fn step(input: &mut [[u8; 10]; 10]) -> i32 {
     // pad 1 additional edges to make it easier to test adjacents
-    let mut c = [[0 as u8; 12]; 12];
+    let mut c = [[0; 12]; 12];
 
     let mut result: i32 = 0;
     for i in 0..10 {
@@ -108,7 +108,7 @@ fn print_status(input: &[[u8; 10]; 10]) {
         for j in 0..input[0].len() {
             print!("{}", input[i][j]);
         }
-        println!("");
+        println!();
     }
 }
 

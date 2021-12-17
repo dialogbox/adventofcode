@@ -164,14 +164,14 @@ mod tests {
                 let total_score = s
                     .chars()
                     .into_iter()
-                    .map(|c| get_completion_score(c))
+                    .map(get_completion_score)
                     .fold(0, |acc, s| acc * 5 + s);
 
                 scores.push(total_score);
             }
         }
 
-        scores.sort();
+        scores.sort_unstable();
 
         let answer = scores[scores.len() / 2];
 
@@ -196,7 +196,7 @@ mod tests {
             }
         }
 
-        scores.sort();
+        scores.sort_unstable();
 
         let answer = scores[scores.len() / 2];
 

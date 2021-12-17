@@ -19,8 +19,9 @@ fn read_input(filename: &str) -> std::io::Result<Vec<Vec<u8>>> {
     Ok(result)
 }
 
+#[allow(dead_code)]
 fn multiply_map(orig: Vec<Vec<u8>>, factor: usize) -> Vec<Vec<u8>> {
-    let mut result = vec![vec![0 as u8; orig[0].len() * factor]; orig.len() * factor];
+    let mut result = vec![vec![0; orig[0].len() * factor]; orig.len() * factor];
 
     let o_width = orig[0].len();
     let o_height = orig.len();
@@ -40,7 +41,7 @@ fn multiply_map(orig: Vec<Vec<u8>>, factor: usize) -> Vec<Vec<u8>> {
 }
 
 fn visit(
-    map: &Vec<Vec<u8>>,
+    map: &[Vec<u8>],
     distance_map: &mut Vec<Vec<i32>>,
     unvisited: &mut Vec<Vec<bool>>,
     x: usize,
@@ -72,7 +73,7 @@ fn visit(
 }
 
 #[allow(dead_code)]
-fn shortest_path(map: &Vec<Vec<u8>>) -> Vec<Vec<i32>> {
+fn shortest_path(map: &[Vec<u8>]) -> Vec<Vec<i32>> {
     let width = map[0].len();
     let height = map.len();
 
@@ -108,32 +109,26 @@ fn shortest_path(map: &Vec<Vec<u8>>) -> Vec<Vec<i32>> {
 }
 
 #[allow(dead_code)]
-fn print_map<T>(map: &Vec<Vec<T>>)
+fn print_map<T>(map: &[Vec<T>])
 where
     T: Display,
 {
-    let width = map[0].len();
-    let height = map.len();
-
-    for y in 0..height {
-        for x in 0..width {
-            print!("{:^5} ", map[y][x]);
+    for l in map {
+        for c in l {
+            print!("{:^5} ", *c);
         }
         println!();
     }
 }
 
 #[allow(dead_code)]
-fn print_map_dense<T>(map: &Vec<Vec<T>>)
+fn print_map_dense<T>(map: &[Vec<T>])
 where
     T: Display,
 {
-    let width = map[0].len();
-    let height = map.len();
-
-    for y in 0..height {
-        for x in 0..width {
-            print!("{}", map[y][x]);
+    for l in map {
+        for c in l {
+            print!("{} ", *c);
         }
         println!();
     }

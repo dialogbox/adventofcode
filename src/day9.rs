@@ -20,7 +20,7 @@ fn read_input(filename: &str) -> std::io::Result<Vec<Vec<u8>>> {
 }
 
 #[allow(dead_code)]
-fn find_low_points(map: &Vec<Vec<u8>>) -> Vec<(usize, usize)> {
+fn find_low_points(map: &[Vec<u8>]) -> Vec<(usize, usize)> {
     let mut result = Vec::new();
 
     let map_height = map.len();
@@ -51,7 +51,7 @@ fn find_low_points(map: &Vec<Vec<u8>>) -> Vec<(usize, usize)> {
 }
 
 #[allow(dead_code)]
-fn total_risk_level(map: &Vec<Vec<u8>>, points: &Vec<(usize, usize)>) -> i32 {
+fn total_risk_level(map: &[Vec<u8>], points: &[(usize, usize)]) -> i32 {
     points
         .iter()
         .map(|(i, j)| map[*i][*j] + 1)
@@ -60,7 +60,7 @@ fn total_risk_level(map: &Vec<Vec<u8>>, points: &Vec<(usize, usize)>) -> i32 {
 }
 
 #[allow(dead_code)]
-fn find_basin(map: &Vec<Vec<u8>>, x: usize, y: usize) -> HashSet<(usize, usize)> {
+fn find_basin(map: &[Vec<u8>], x: usize, y: usize) -> HashSet<(usize, usize)> {
     let mut result: HashSet<(usize, usize)> = HashSet::new();
     let mut tmp: Vec<(usize, usize)> = Vec::with_capacity(4);
     result.insert((x, y));
@@ -154,7 +154,7 @@ mod tests {
             .map(|b| b.len())
             .collect::<Vec<usize>>();
 
-        basin_sizes.sort();
+        basin_sizes.sort_unstable();
         let answer =
             basin_sizes.pop().unwrap() * basin_sizes.pop().unwrap() * basin_sizes.pop().unwrap();
 
@@ -173,7 +173,7 @@ mod tests {
             .map(|b| b.len())
             .collect::<Vec<usize>>();
 
-        basin_sizes.sort();
+        basin_sizes.sort_unstable();
         let answer =
             basin_sizes.pop().unwrap() * basin_sizes.pop().unwrap() * basin_sizes.pop().unwrap();
 

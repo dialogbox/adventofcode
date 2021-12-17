@@ -12,7 +12,7 @@ pub fn read_report(filename: &str) -> std::io::Result<Vec<String>> {
 }
 
 #[allow(dead_code)]
-pub fn compute_power_consumption(report: &Vec<String>) -> (i32, i32) {
+pub fn compute_power_consumption(report: &[String]) -> (i32, i32) {
     let mut gamma_str: String = "0".into();
     let mut epsilon_str: String = "0".into();
 
@@ -32,7 +32,7 @@ pub fn compute_power_consumption(report: &Vec<String>) -> (i32, i32) {
     )
 }
 
-fn most_common_bit(report: &Vec<String>, bit_idx: usize) -> bool {
+fn most_common_bit(report: &[String], bit_idx: usize) -> bool {
     let mut count = 0;
 
     for l in report {
@@ -41,24 +41,17 @@ fn most_common_bit(report: &Vec<String>, bit_idx: usize) -> bool {
         }
     }
 
-    if count >= report.len() - count {
-        false
-    } else {
-        true
-    }
+    count < report.len() - count
 }
 
-pub fn partition_by_bit_value<'a>(
-    report: &'a [String],
-    bit_idx: usize,
-) -> (&'a [String], &'a [String]) {
+pub fn partition_by_bit_value(report: &[String], bit_idx: usize) -> (&[String], &[String]) {
     let idx = report.partition_point(|l| l.chars().nth(bit_idx) == Some('0'));
 
     (&report[0..idx], &report[idx..])
 }
 
 #[allow(dead_code)]
-pub fn compute_oxygen_generator_rating(report: &Vec<String>) -> i32 {
+pub fn compute_oxygen_generator_rating(report: &[String]) -> i32 {
     let mut cur: &[String] = report;
 
     for i in 0..report[0].len() {
@@ -83,7 +76,7 @@ pub fn compute_oxygen_generator_rating(report: &Vec<String>) -> i32 {
 }
 
 #[allow(dead_code)]
-pub fn compute_co2_scrubber_rating(report: &Vec<String>) -> i32 {
+pub fn compute_co2_scrubber_rating(report: &[String]) -> i32 {
     let mut cur: &[String] = report;
 
     for i in 0..report[0].len() {

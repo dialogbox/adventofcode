@@ -10,8 +10,8 @@ fn read_folding_input(filename: &str) -> std::io::Result<Vec<(char, usize)>> {
 
     for l in lines {
         let l = l?;
-        let mut fold = l.split_terminator("=");
-        let axis = fold.next().unwrap().chars().nth(0).unwrap();
+        let mut fold = l.split('=');
+        let axis = fold.next().unwrap().chars().next().unwrap();
         let pos = fold.next().unwrap().parse::<usize>().unwrap();
 
         result.push((axis, pos));
@@ -29,7 +29,7 @@ fn read_coords(filename: &str) -> std::io::Result<Vec<(usize, usize)>> {
     for l in lines {
         let l = l?;
 
-        let mut xy = l.split_terminator(",");
+        let mut xy = l.split(',');
         let x = xy.next().unwrap().parse::<usize>().unwrap();
         let y = xy.next().unwrap().parse::<usize>().unwrap();
 
@@ -53,7 +53,7 @@ fn fold_coords_x(mut coords: Vec<(usize, usize)>, pos: usize) -> Vec<(usize, usi
         }
     }
 
-    coords.sort();
+    coords.sort_unstable();
     coords.dedup();
 
     coords
@@ -67,7 +67,7 @@ fn fold_coords_y(mut coords: Vec<(usize, usize)>, pos: usize) -> Vec<(usize, usi
         }
     }
 
-    coords.sort();
+    coords.sort_unstable();
     coords.dedup();
 
     coords
@@ -109,7 +109,7 @@ fn fold_map_y(map: Vec<Vec<bool>>) -> Vec<Vec<bool>> {
 }
 
 #[allow(dead_code)]
-fn to_dense(coords: &Vec<(usize, usize)>) -> Vec<Vec<bool>> {
+fn to_dense(coords: &[(usize, usize)]) -> Vec<Vec<bool>> {
     let mut x_max = 0;
     let mut y_max = 0;
 
@@ -128,7 +128,7 @@ fn to_dense(coords: &Vec<(usize, usize)>) -> Vec<Vec<bool>> {
 }
 
 #[allow(dead_code)]
-fn print_coords(coords: &Vec<(usize, usize)>) {
+fn print_coords(coords: &[(usize, usize)]) {
     for (x, y) in coords {
         println!("({},{})", x, y);
     }
@@ -136,7 +136,7 @@ fn print_coords(coords: &Vec<(usize, usize)>) {
 }
 
 #[allow(dead_code)]
-fn print_map(map: &Vec<Vec<bool>>) {
+fn print_map(map: &[Vec<bool>]) {
     for l in map {
         let t = l
             .iter()

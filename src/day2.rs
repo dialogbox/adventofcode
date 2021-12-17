@@ -47,14 +47,14 @@ pub fn read_plan(filename: &str) -> std::io::Result<Vec<Command>> {
 }
 
 #[allow(dead_code)]
-pub fn do_plan(plan: &Vec<Command>, starting_position: (i32, i32)) -> (i32, i32) {
+pub fn do_plan(plan: &[Command], starting_position: (i32, i32)) -> (i32, i32) {
     let (mut h, mut d) = starting_position;
 
     for command in plan {
         match command.direction {
-            Direction::Forward => h = h + command.distance,
-            Direction::Up => d = d - command.distance,
-            Direction::Down => d = d + command.distance,
+            Direction::Forward => h += command.distance,
+            Direction::Up => d -= command.distance,
+            Direction::Down => d += command.distance,
         }
     }
 
@@ -62,17 +62,17 @@ pub fn do_plan(plan: &Vec<Command>, starting_position: (i32, i32)) -> (i32, i32)
 }
 
 #[allow(dead_code)]
-pub fn do_new_plan(plan: &Vec<Command>, starting_position: (i32, i32, i32)) -> (i32, i32, i32) {
+pub fn do_new_plan(plan: &[Command], starting_position: (i32, i32, i32)) -> (i32, i32, i32) {
     let (mut h, mut d, mut aim) = starting_position;
 
     for command in plan {
         match command.direction {
             Direction::Forward => {
-                h = h + command.distance;
-                d = d + aim * command.distance;
+                h += command.distance;
+                d += aim * command.distance;
             }
-            Direction::Up => aim = aim - command.distance,
-            Direction::Down => aim = aim + command.distance,
+            Direction::Up => aim -= command.distance,
+            Direction::Down => aim += command.distance,
         }
     }
 

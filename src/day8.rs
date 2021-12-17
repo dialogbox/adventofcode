@@ -7,26 +7,26 @@ struct Entry {
 }
 
 #[allow(dead_code)]
-fn string_minus(a: &String, b: &String) -> String {
+fn string_minus(a: &str, b: &str) -> String {
     a.chars().filter(|e| !b.contains(*e)).collect::<String>()
 }
 
 #[allow(dead_code)]
-fn string_intersect(a: &String, b: &String) -> String {
+fn string_intersect(a: &str, b: &str) -> String {
     a.chars().filter(|e| b.contains(*e)).collect::<String>()
 }
 
 impl Entry {
-    #[allow(dead_code)]
+    #[allow(dead_code, clippy::many_single_char_names)]
     fn analyze(&self) -> [char; 7] {
         let pattern_1 = &self.unique_patterns[0];
         let pattern_4 = &self.unique_patterns[2];
         let pattern_7 = &self.unique_patterns[1];
         let pattern_8 = &self.unique_patterns[9];
 
-        let a = string_minus(&pattern_7, &pattern_1);
+        let a = string_minus(pattern_7, pattern_1);
 
-        let bd = string_minus(&pattern_4, &pattern_1);
+        let bd = string_minus(pattern_4, pattern_1);
 
         let d_1 = string_minus(&bd, &self.unique_patterns[6]);
         let d_2 = string_minus(&bd, &self.unique_patterns[7]);
@@ -42,9 +42,9 @@ impl Entry {
 
         let b = string_minus(&bd, &d);
 
-        let c_1 = string_minus(&pattern_1, &self.unique_patterns[6]);
-        let c_2 = string_minus(&pattern_1, &self.unique_patterns[7]);
-        let c_3 = string_minus(&pattern_1, &self.unique_patterns[8]);
+        let c_1 = string_minus(pattern_1, &self.unique_patterns[6]);
+        let c_2 = string_minus(pattern_1, &self.unique_patterns[7]);
+        let c_3 = string_minus(pattern_1, &self.unique_patterns[8]);
 
         let c = if c_1.len() == 1 {
             c_1
@@ -54,11 +54,11 @@ impl Entry {
             c_3
         };
 
-        let f = string_minus(&pattern_1, &c);
+        let f = string_minus(pattern_1, &c);
 
-        let e_1 = string_minus(&pattern_8, &self.unique_patterns[6]);
-        let e_2 = string_minus(&pattern_8, &self.unique_patterns[7]);
-        let e_3 = string_minus(&pattern_8, &self.unique_patterns[8]);
+        let e_1 = string_minus(pattern_8, &self.unique_patterns[6]);
+        let e_2 = string_minus(pattern_8, &self.unique_patterns[7]);
+        let e_3 = string_minus(pattern_8, &self.unique_patterns[8]);
 
         let e = if e_1 != c && e_1 != d {
             e_1
@@ -68,9 +68,9 @@ impl Entry {
             e_3
         };
 
-        let g = string_minus(&pattern_8, &format!("{}{}{}{}{}{}", a, b, c, d, e, f));
+        let g = string_minus(pattern_8, &format!("{}{}{}{}{}{}", a, b, c, d, e, f));
 
-        [a, b, c, d, e, f, g].map(|c| c.chars().nth(0).unwrap())
+        [a, b, c, d, e, f, g].map(|c| c.chars().next().unwrap())
     }
 
     #[allow(dead_code)]
@@ -90,15 +90,15 @@ impl Entry {
             vec![pat[0], pat[1], pat[2], pat[3], pat[5], pat[6]],
         ]
         .map(|mut p| {
-            p.sort();
+            p.sort_unstable();
             p.iter().collect::<String>()
         })
     }
 
     #[allow(dead_code)]
-    fn find_output_digit(pat: &[String; 10], output_value: &String) -> Option<u8> {
+    fn find_output_digit(pat: &[String; 10], output_value: &str) -> Option<u8> {
         let mut sorted_output_value = output_value.chars().collect::<Vec<char>>();
-        sorted_output_value.sort();
+        sorted_output_value.sort_unstable();
         let sorted_output_value = sorted_output_value.iter().collect::<String>();
 
         for (i, p) in pat.iter().enumerate() {
@@ -116,7 +116,7 @@ impl Entry {
         let mut result = 0;
 
         for i in &self.output_values {
-            if let Some(v) = Self::find_output_digit(&pat, &i) {
+            if let Some(v) = Self::find_output_digit(&pat, i) {
                 result *= 10;
                 result += v as i32;
             } else {

@@ -5,17 +5,17 @@ fn read_input(filename: &str) -> std::io::Result<Vec<i32>> {
     let line = input_lines(filename)?.next().unwrap()?;
 
     let mut nums = line
-        .split_terminator(",")
+        .split(',')
         .map(|n| n.parse::<i32>().unwrap())
         .collect::<Vec<i32>>();
 
-    nums.sort();
+    nums.sort_unstable();
 
     Ok(nums)
 }
 
 #[allow(dead_code)]
-fn part1(nums: &Vec<i32>) -> (i32, i32) {
+fn part1(nums: &[i32]) -> (i32, i32) {
     let l = nums.len();
 
     let median = if l % 2 == 0 {
@@ -33,7 +33,7 @@ fn part1(nums: &Vec<i32>) -> (i32, i32) {
 }
 
 #[allow(dead_code)]
-fn cal_fuels_part2(nums: &Vec<i32>, pos: i32) -> i32 {
+fn cal_fuels_part2(nums: &[i32], pos: i32) -> i32 {
     let mut result = 0;
     for n in nums {
         let dist = (n - pos).abs();
@@ -48,7 +48,7 @@ fn cal_fuels_part2(nums: &Vec<i32>, pos: i32) -> i32 {
 }
 
 #[allow(dead_code)]
-fn part2(nums: &Vec<i32>) -> (i32, i32) {
+fn part2(nums: &[i32]) -> (i32, i32) {
     // Starts from mean
     let pos = nums.iter().sum::<i32>() / nums.len() as i32;
 

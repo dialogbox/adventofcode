@@ -117,7 +117,7 @@ mod tests {
 
     #[test]
     fn test_some() {
-        let mut n = 20 as i64;
+        let mut n = 20;
         for _ in 0..40 {
             n += n - 1;
         }

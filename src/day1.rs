@@ -8,15 +8,15 @@ pub fn part1(filename: &str) -> std::io::Result<i32> {
     let mut cur: u16 = u16::MAX;
     let mut result = 0;
 
-    for line in lines {
+    lines.for_each(|line| {
         if let Ok(measurement) = line {
             let m = measurement.parse::<u16>().unwrap();
             if m > cur {
-                result = result + 1;
+                result += 1;
             }
             cur = m;
         }
-    }
+    });
 
     Ok(result)
 }
@@ -33,12 +33,12 @@ pub fn part2(filename: &str) -> std::io::Result<i32> {
     for line in lines.by_ref().take(3) {
         let m = line.unwrap().parse::<u16>().unwrap();
         window.push_back(m);
-        cur = cur + m;
+        cur += m;
     }
 
     // let lines = lines.skip(1);
 
-    for line in lines {
+    lines.for_each(|line| {
         if let Ok(measurement) = line {
             print!("{:?}({})", window, cur);
             let m = measurement.parse::<u16>().unwrap();
@@ -52,12 +52,12 @@ pub fn part2(filename: &str) -> std::io::Result<i32> {
 
             if t > cur {
                 print!(" => INCREASED");
-                result = result + 1;
+                result += 1;
             }
-            println!("");
+            println!();
             cur = t;
         }
-    }
+    });
 
     Ok(result)
 }

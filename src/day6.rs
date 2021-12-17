@@ -5,7 +5,7 @@ fn read_input(filename: &str) -> std::io::Result<Vec<u64>> {
     let line = input_lines(filename)?.next().unwrap()?;
 
     let nums = line
-        .split_terminator(",")
+        .split(',')
         .map(|n| n.parse::<u64>().unwrap())
         .collect::<Vec<_>>();
 
@@ -13,7 +13,7 @@ fn read_input(filename: &str) -> std::io::Result<Vec<u64>> {
 }
 
 #[allow(dead_code)]
-fn compress_input(nums: &Vec<u64>) -> [u64; 9] {
+fn compress_input(nums: &[u64]) -> [u64; 9] {
     let mut result = [0; 9];
     for n in nums {
         result[*n as usize] += 1;

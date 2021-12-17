@@ -50,7 +50,7 @@ impl WorldMap {
         WorldMap {
             width,
             height,
-            map: vec![vec![0 as u32; height]; width],
+            map: vec![vec![0; height]; width],
         }
     }
 
@@ -121,11 +121,11 @@ pub fn read_input(filename: &str) -> std::io::Result<Vec<Line>> {
         let line = line.unwrap();
         let t: Vec<&str> = line.split(" -> ").collect();
 
-        let mut p = t[0].split(",");
+        let mut p = t[0].split(',');
         let x1 = p.next().unwrap();
         let y1 = p.next().unwrap();
 
-        let mut p = t[1].split(",");
+        let mut p = t[1].split(',');
         let x2 = p.next().unwrap();
         let y2 = p.next().unwrap();
 
