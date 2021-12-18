@@ -24,6 +24,32 @@ pub fn input_lines(filename: &str) -> io::Result<io::Lines<io::BufReader<File>>>
     Ok(io::BufReader::new(file).lines())
 }
 
+pub fn read_table_input(filename: &str) -> std::io::Result<Vec<Vec<char>>> {
+    let lines = input_lines(filename)?;
+
+    let mut result = Vec::new();
+
+    for l in lines {
+        result.push(l?.chars().collect::<Vec<char>>());
+    }
+
+    Ok(result)
+}
+
+pub fn read_u8_table_input(filename: &str) -> std::io::Result<Vec<Vec<u8>>> {
+    let table = read_table_input(filename)?;
+    let result = table
+        .iter()
+        .map(|l| {
+            l.iter()
+                .map(|c| c.to_digit(10).unwrap() as u8)
+                .collect::<Vec<u8>>()
+        })
+        .collect();
+
+    Ok(result)
+}
+
 #[cfg(test)]
 mod tests {
     #[test]

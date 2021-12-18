@@ -1,24 +1,5 @@
 use std::{cmp::Ordering, collections::BinaryHeap, fmt::Display};
 
-use super::input_lines;
-
-#[allow(dead_code)]
-fn read_input(filename: &str) -> std::io::Result<Vec<Vec<u8>>> {
-    let lines = input_lines(filename)?;
-
-    let mut result = Vec::new();
-
-    for l in lines {
-        result.push(
-            l?.chars()
-                .map(|c| c.to_digit(10).unwrap() as u8)
-                .collect::<Vec<u8>>(),
-        );
-    }
-
-    Ok(result)
-}
-
 #[allow(dead_code)]
 fn multiply_map(orig: Vec<Vec<u8>>, factor: usize) -> Vec<Vec<u8>> {
     let mut result = vec![vec![0; orig[0].len() * factor]; orig.len() * factor];
@@ -44,7 +25,6 @@ fn multiply_map(orig: Vec<Vec<u8>>, factor: usize) -> Vec<Vec<u8>> {
 struct State {
     cost: usize,
     position: (usize, usize),
-    path: Vec<(usize, usize)>,
 }
 
 // The priority queue depends on `Ord`.
@@ -69,8 +49,8 @@ impl PartialOrd for State {
     }
 }
 
-#[allow(dead_code)]
-fn shortest_path(map: &[Vec<u8>]) -> Option<(usize, Vec<(usize, usize)>)> {
+// Compute a cost map using dijkstra
+fn compute_cost_map(map: &[Vec<u8>]) -> Option<Vec<Vec<usize>>> {
     let width = map[0].len();
     let height = map.len();
     let goal = (width - 1, height - 1);
@@ -82,18 +62,12 @@ fn shortest_path(map: &[Vec<u8>]) -> Option<(usize, Vec<(usize, usize)>)> {
     heap.push(State {
         cost: 0,
         position: (0, 0),
-        path: vec![(0, 0)],
     });
 
-    while let Some(State {
-        cost,
-        position,
-        path,
-    }) = heap.pop()
-    {
+    while let Some(State { cost, position }) = heap.pop() {
         // Alternatively we could have continued to find all shortest paths
         if position == goal {
-            return Some((cost, path));
+            return Some(dist);
         }
 
         let (x, y) = position;
@@ -124,26 +98,78 @@ fn shortest_path(map: &[Vec<u8>]) -> Option<(usize, Vec<(usize, usize)>)> {
         }
 
         for (next_x, next_y) in adjacents {
-            let mut next_path = path.clone();
-            next_path.push((next_x, next_y));
-
-            let next = State {
-                cost: cost + map[next_y][next_x] as usize,
-                position: (next_x, next_y),
-                path: next_path,
-            };
+            let next_cost = cost + map[next_y][next_x] as usize;
 
             // If so, add it to the frontier and continue
-            if next.cost < dist[next_y][next_x] {
+            if next_cost < dist[next_y][next_x] {
                 // Relaxation, we have now found a better way
-                dist[next_y][next_x] = next.cost;
+                dist[next_y][next_x] = next_cost;
 
-                heap.push(next);
+                heap.push(State {
+                    cost: next_cost,
+                    position: (next_x, next_y),
+                });
             }
         }
     }
 
     None
+}
+
+// Find the best path based on the given cost map
+fn find_path(dist: &[Vec<usize>]) -> Option<(usize, Vec<(usize, usize)>)> {
+    let width = dist[0].len();
+    let height = dist.len();
+
+    let mut x = width - 1;
+    let mut y = height - 1;
+
+    let mut result = vec![(x, y)];
+    let cost = dist[y][x];
+
+    while (x, y) != (0, 0) {
+        let mut heap = BinaryHeap::new();
+        if x > 0 {
+            // left
+            let nx = x - 1;
+            let ny = y;
+            heap.push((0 - dist[ny][nx] as isize, (nx, ny)));
+        }
+        if x < width - 1 {
+            // right
+            let nx = x + 1;
+            let ny = y;
+            heap.push((0 - dist[ny][nx] as isize, (nx, ny)));
+        }
+        if y > 0 {
+            // top
+            let nx = x;
+            let ny = y - 1;
+            heap.push((0 - dist[ny][nx] as isize, (nx, ny)));
+        }
+        if y < height - 1 {
+            // down
+            let nx = x;
+            let ny = y + 1;
+            heap.push((0 - dist[ny][nx] as isize, (nx, ny)));
+        }
+        if let Some((_, (nx, ny))) = heap.pop() {
+            x = nx;
+            y = ny;
+            result.push((nx, ny));
+        } else {
+            return None;
+        }
+    }
+
+    result.reverse();
+
+    Some((cost, result))
+}
+
+#[allow(dead_code)]
+fn shortest_path(map: &[Vec<u8>]) -> Option<(usize, Vec<(usize, usize)>)> {
+    compute_cost_map(map).map(|dist| find_path(&dist)).flatten()
 }
 
 #[allow(dead_code)]
@@ -174,18 +200,19 @@ where
 
 #[cfg(test)]
 mod test {
+    use super::super::read_u8_table_input;
     use super::*;
 
     #[test]
     fn test_read_input() {
-        let map = read_input("inputs/day15_test.txt").unwrap();
+        let map = read_u8_table_input("inputs/day15_test.txt").unwrap();
 
         println!("{:#?}", map);
     }
 
     #[test]
     fn test_part1() {
-        let map = read_input("inputs/day15_test.txt").unwrap();
+        let map = read_u8_table_input("inputs/day15_test.txt").unwrap();
 
         let (cost, _path) = shortest_path(&map).unwrap();
 
@@ -194,7 +221,7 @@ mod test {
 
     #[test]
     fn do_part1() {
-        let map = read_input("inputs/day15.txt").unwrap();
+        let map = read_u8_table_input("inputs/day15.txt").unwrap();
 
         let (cost, _path) = shortest_path(&map).unwrap();
 
@@ -203,7 +230,7 @@ mod test {
 
     #[test]
     fn test_part2() {
-        let map = read_input("inputs/day15_test.txt").unwrap();
+        let map = read_u8_table_input("inputs/day15_test.txt").unwrap();
         let map = multiply_map(map, 5);
 
         let (cost, _path) = shortest_path(&map).unwrap();
@@ -213,7 +240,7 @@ mod test {
 
     #[test]
     fn do_part2() {
-        let map = read_input("inputs/day15.txt").unwrap();
+        let map = read_u8_table_input("inputs/day15.txt").unwrap();
         let map = multiply_map(map, 5);
 
         let (cost, _path) = shortest_path(&map).unwrap();
