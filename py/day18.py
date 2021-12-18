@@ -3,7 +3,7 @@ import utils
 import copy
 
 
-def parse_pair2(input):
+def parse_pair(input):
     depth = 0
 
     for c in input:
@@ -17,32 +17,6 @@ def parse_pair2(input):
             continue
 
         yield [depth, int(c)]
-
-
-def parse_pair(input):
-    if input[0] != '[':
-        print(f"Expected '[' but got '{input[0]}'\n")
-        raise ValueError
-
-    if input[1] == '[':
-        (lval, newinput) = parse_pair(input[1:])
-        input = newinput
-    else:
-        lval = int(input[1])
-        input = input[2:]
-
-    if input[0] != ',':
-        print(f"Expected ',' but got '{input[0]}'\n")
-        raise ValueError
-
-    if input[1] == '[':
-        (rval, newinput) = parse_pair(input[1:])
-        input = newinput
-    else:
-        rval = int(input[1])
-        input = input[2:]
-
-    return ([lval, rval], input[1:])
 
 
 def leftmost_deeps(pair, depth=0):
@@ -164,7 +138,7 @@ def part2(data):
 if __name__ == '__main__':
     lines = utils.read_lines("inputs/day18.txt")
 
-    data = [list(parse_pair2(line)) for line in lines]
+    data = [list(parse_pair(line)) for line in lines]
 
     m = part1(copy.deepcopy(data))
     print(f"Part 1: {m}")
