@@ -106,7 +106,7 @@ mod tests {
 
     #[test]
     fn test_read_report() {
-        let report = read_report("inputs/day3.txt").unwrap();
+        let report = read_report("../inputs/day3.txt").unwrap();
         for line in report {
             println!("{:?}", line);
         }
@@ -114,7 +114,7 @@ mod tests {
 
     #[test]
     fn test_compute_power_consumption() {
-        let report = read_report("inputs/day3.txt").unwrap();
+        let report = read_report("../inputs/day3.txt").unwrap();
         let (gamma, epsilon) = compute_power_consumption(&report);
 
         println!(
@@ -127,7 +127,7 @@ mod tests {
 
     #[test]
     fn test_life_support_rating() {
-        let report = read_report("inputs/day3.txt").unwrap();
+        let report = read_report("../inputs/day3.txt").unwrap();
 
         let oxygen_generator_rating = compute_oxygen_generator_rating(&report);
         let co2_scrubber_rating = compute_co2_scrubber_rating(&report);

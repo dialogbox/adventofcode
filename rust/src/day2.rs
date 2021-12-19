@@ -85,13 +85,13 @@ mod tests {
 
     #[test]
     fn test_read_plan() {
-        let plan = read_plan("inputs/day2.txt").unwrap();
+        let plan = read_plan("../inputs/day2.txt").unwrap();
         println!("{:?}", plan);
     }
 
     #[test]
     fn test_do_plan() {
-        let plan = read_plan("inputs/day2.txt").unwrap();
+        let plan = read_plan("../inputs/day2.txt").unwrap();
         let result = do_plan(&plan, (0, 0));
 
         println!("{:?}", result);
@@ -100,7 +100,7 @@ mod tests {
 
     #[test]
     fn test_do_new_plan() {
-        let plan = read_plan("inputs/day2.txt").unwrap();
+        let plan = read_plan("../inputs/day2.txt").unwrap();
         let result = do_new_plan(&plan, (0, 0, 0));
 
         println!("{:?}", result);

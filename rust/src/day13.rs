@@ -159,30 +159,30 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let map = read_map("inputs/day13_test.txt").unwrap();
+        let map = read_map("../inputs/day13_test.txt").unwrap();
 
         print_map(&map);
 
-        let folds = read_folding_input("inputs/day13_test_fold.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_test_fold.txt").unwrap();
 
         println!("{:?}", folds);
     }
 
     #[test]
     fn test_read_real_input() {
-        let map = read_map("inputs/day13.txt").unwrap();
+        let map = read_map("../inputs/day13.txt").unwrap();
 
         print_map(&map);
 
-        let folds = read_folding_input("inputs/day13_fold.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_fold.txt").unwrap();
 
         println!("{:?}", folds);
     }
 
     #[test]
     fn test_part1() {
-        let map = read_map("inputs/day13_test.txt").unwrap();
-        let folds = read_folding_input("inputs/day13_test_fold.txt").unwrap();
+        let map = read_map("../inputs/day13_test.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_test_fold.txt").unwrap();
 
         let result = if folds[0].0 == 'x' {
             fold_map_x(map)
@@ -214,8 +214,8 @@ mod tests {
 
     #[test]
     fn test_part1_v2() {
-        let coords = read_coords("inputs/day13_test.txt").unwrap();
-        let folds = read_folding_input("inputs/day13_test_fold.txt").unwrap();
+        let coords = read_coords("../inputs/day13_test.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_test_fold.txt").unwrap();
 
         let result = if folds[0].0 == 'x' {
             fold_coords_x(coords, folds[0].1)
@@ -238,8 +238,8 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let map = read_map("inputs/day13.txt").unwrap();
-        let folds = read_folding_input("inputs/day13_fold.txt").unwrap();
+        let map = read_map("../inputs/day13.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_fold.txt").unwrap();
 
         let result = if folds[0].0 == 'x' {
             fold_map_x(map)
@@ -261,8 +261,8 @@ mod tests {
 
     #[test]
     fn do_part1_v2() {
-        let coords = read_coords("inputs/day13.txt").unwrap();
-        let folds = read_folding_input("inputs/day13_fold.txt").unwrap();
+        let coords = read_coords("../inputs/day13.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_fold.txt").unwrap();
 
         let result = if folds[0].0 == 'x' {
             fold_coords_x(coords, folds[0].1)
@@ -277,8 +277,8 @@ mod tests {
 
     #[test]
     fn do_part2() {
-        let map = read_map("inputs/day13.txt").unwrap();
-        let folds = read_folding_input("inputs/day13_fold.txt").unwrap();
+        let map = read_map("../inputs/day13.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_fold.txt").unwrap();
 
         let mut result = map;
 
@@ -295,8 +295,8 @@ mod tests {
 
     #[test]
     fn do_part2_v2() {
-        let coords = read_coords("inputs/day13.txt").unwrap();
-        let folds = read_folding_input("inputs/day13_fold.txt").unwrap();
+        let coords = read_coords("../inputs/day13.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_fold.txt").unwrap();
 
         let mut result = coords;
 
@@ -313,8 +313,8 @@ mod tests {
 
     #[test]
     fn do_part2_huge() {
-        let coords = read_coords("inputs/day13_huge.txt").unwrap();
-        let folds = read_folding_input("inputs/day13_huge_fold.txt").unwrap();
+        let coords = read_coords("../inputs/day13_huge.txt").unwrap();
+        let folds = read_folding_input("../inputs/day13_huge_fold.txt").unwrap();
 
         let mut result = coords;
 

@@ -173,14 +173,14 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let entries = read_input("inputs/day8_test.txt").unwrap();
+        let entries = read_input("../inputs/day8_test.txt").unwrap();
 
         println!("{:#?}", entries);
     }
 
     #[test]
     fn test_part1() {
-        let entries = read_input("inputs/day8_test.txt").unwrap();
+        let entries = read_input("../inputs/day8_test.txt").unwrap();
         let mut result = 0;
 
         for e in &entries {
@@ -197,7 +197,7 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let entries = read_input("inputs/day8.txt").unwrap();
+        let entries = read_input("../inputs/day8.txt").unwrap();
         let mut result = 0;
 
         for e in &entries {
@@ -214,7 +214,7 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        let entries = read_input("inputs/day8_test.txt").unwrap();
+        let entries = read_input("../inputs/day8_test.txt").unwrap();
 
         for e in &entries {
             println!(
@@ -227,7 +227,7 @@ mod tests {
 
     #[test]
     fn test_part2_sum() {
-        let entries = read_input("inputs/day8_test.txt").unwrap();
+        let entries = read_input("../inputs/day8_test.txt").unwrap();
 
         let sum = entries
             .iter()
@@ -239,7 +239,7 @@ mod tests {
 
     #[test]
     fn do_part2() {
-        let entries = read_input("inputs/day8.txt").unwrap();
+        let entries = read_input("../inputs/day8.txt").unwrap();
 
         let sum = entries
             .iter()

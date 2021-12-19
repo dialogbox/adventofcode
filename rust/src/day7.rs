@@ -90,7 +90,7 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let nums = read_input("inputs/day7_test.txt").unwrap();
+        let nums = read_input("../inputs/day7_test.txt").unwrap();
 
         println!("{:?}", nums);
         println!("{}", nums.iter().sum::<i32>() / nums.len() as i32);
@@ -98,7 +98,7 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        let nums = read_input("inputs/day7_test.txt").unwrap();
+        let nums = read_input("../inputs/day7_test.txt").unwrap();
 
         let (pos, fuels) = part1(&nums);
 
@@ -108,7 +108,7 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let nums = read_input("inputs/day7.txt").unwrap();
+        let nums = read_input("../inputs/day7.txt").unwrap();
 
         let (pos, fuels) = part1(&nums);
 
@@ -117,7 +117,7 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        let nums = read_input("inputs/day7_test.txt").unwrap();
+        let nums = read_input("../inputs/day7_test.txt").unwrap();
 
         let (pos, fuels) = part2(&nums);
 
@@ -127,7 +127,7 @@ mod tests {
 
     #[test]
     fn do_part2() {
-        let nums = read_input("inputs/day7.txt").unwrap();
+        let nums = read_input("../inputs/day7.txt").unwrap();
 
         let (pos, fuels) = part2(&nums);
 

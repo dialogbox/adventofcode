@@ -127,7 +127,7 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let (tmpl, rules) = read_input("inputs/day14_test.txt").unwrap();
+        let (tmpl, rules) = read_input("../inputs/day14_test.txt").unwrap();
 
         println!("{}", tmpl);
         println!("{:?}", rules);
@@ -135,7 +135,7 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        let (tmpl, rules) = read_input("inputs/day14_test.txt").unwrap();
+        let (tmpl, rules) = read_input("../inputs/day14_test.txt").unwrap();
         let rules = convert_rules(&rules);
         let mut seeds = convert_template(&tmpl);
 
@@ -153,7 +153,7 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let (tmpl, rules) = read_input("inputs/day14.txt").unwrap();
+        let (tmpl, rules) = read_input("../inputs/day14.txt").unwrap();
         let rules = convert_rules(&rules);
         let mut seeds = convert_template(&tmpl);
 
@@ -171,7 +171,7 @@ mod tests {
 
     #[test]
     fn do_part2() {
-        let (tmpl, rules) = read_input("inputs/day14.txt").unwrap();
+        let (tmpl, rules) = read_input("../inputs/day14.txt").unwrap();
         let rules = convert_rules(&rules);
         let mut seeds = convert_template(&tmpl);
 

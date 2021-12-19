@@ -113,14 +113,14 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let map = read_input("inputs/day9_test.txt").unwrap();
+        let map = read_input("../inputs/day9_test.txt").unwrap();
 
         println!("{:#?}", map);
     }
 
     #[test]
     fn test_part1() {
-        let map = read_input("inputs/day9_test.txt").unwrap();
+        let map = read_input("../inputs/day9_test.txt").unwrap();
 
         let low_points = find_low_points(&map);
 
@@ -135,7 +135,7 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let map = read_input("inputs/day9.txt").unwrap();
+        let map = read_input("../inputs/day9.txt").unwrap();
 
         let low_points = find_low_points(&map);
         let risk_level = total_risk_level(&map, &low_points);
@@ -144,7 +144,7 @@ mod tests {
     }
     #[test]
     fn test_part2() {
-        let map = read_input("inputs/day9_test.txt").unwrap();
+        let map = read_input("../inputs/day9_test.txt").unwrap();
 
         let low_points = find_low_points(&map);
 
@@ -163,7 +163,7 @@ mod tests {
 
     #[test]
     fn do_part2() {
-        let map = read_input("inputs/day9.txt").unwrap();
+        let map = read_input("../inputs/day9.txt").unwrap();
 
         let low_points = find_low_points(&map);
 

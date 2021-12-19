@@ -294,14 +294,14 @@ mod test {
 
     #[test]
     fn test_read_input() {
-        let map = read_input("inputs/day16_test.txt").unwrap();
+        let map = read_input("../inputs/day16_test.txt").unwrap();
 
         println!("{:?}", map);
     }
 
     #[test]
     fn test_part1() {
-        let map = read_input("inputs/day16_test.txt").unwrap();
+        let map = read_input("../inputs/day16_test.txt").unwrap();
 
         let (_, p) = scan_packet(&map).unwrap();
 
@@ -310,7 +310,7 @@ mod test {
 
     #[test]
     fn do_part1() {
-        let map = read_input("inputs/day16.txt").unwrap();
+        let map = read_input("../inputs/day16.txt").unwrap();
 
         let (_, p) = scan_packet(&map).unwrap();
 
@@ -319,7 +319,7 @@ mod test {
 
     #[test]
     fn test_part2() {
-        let map = read_input("inputs/day16_test.txt").unwrap();
+        let map = read_input("../inputs/day16_test.txt").unwrap();
 
         let (_, p) = scan_packet(&map).unwrap();
 
@@ -328,7 +328,7 @@ mod test {
 
     #[test]
     fn do_part2() {
-        let map = read_input("inputs/day16.txt").unwrap();
+        let map = read_input("../inputs/day16.txt").unwrap();
 
         let (_, p) = scan_packet(&map).unwrap();
 

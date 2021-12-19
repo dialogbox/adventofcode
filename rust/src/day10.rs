@@ -122,14 +122,14 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let lines = read_input("inputs/day10_test.txt").unwrap();
+        let lines = read_input("../inputs/day10_test.txt").unwrap();
 
         println!("{:#?}", lines);
     }
 
     #[test]
     fn test_day1() {
-        let lines = read_input("inputs/day10_test.txt").unwrap();
+        let lines = read_input("../inputs/day10_test.txt").unwrap();
 
         let mut sum = 0;
         for l in &lines {
@@ -142,7 +142,7 @@ mod tests {
 
     #[test]
     fn do_day1() {
-        let lines = read_input("inputs/day10.txt").unwrap();
+        let lines = read_input("../inputs/day10.txt").unwrap();
 
         let mut sum = 0;
         for l in &lines {
@@ -155,7 +155,7 @@ mod tests {
 
     #[test]
     fn test_day2() {
-        let lines = read_input("inputs/day10_test.txt").unwrap();
+        let lines = read_input("../inputs/day10_test.txt").unwrap();
 
         let mut scores = Vec::new();
 
@@ -180,7 +180,7 @@ mod tests {
 
     #[test]
     fn do_day2() {
-        let lines = read_input("inputs/day10.txt").unwrap();
+        let lines = read_input("../inputs/day10.txt").unwrap();
 
         let mut scores = Vec::new();
 

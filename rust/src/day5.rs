@@ -162,7 +162,7 @@ mod tests {
 
     #[test]
     fn test_read_lines() {
-        let lines = read_input("inputs/day5.txt").unwrap();
+        let lines = read_input("../inputs/day5.txt").unwrap();
 
         for l in lines {
             println!("{}", l);
@@ -195,7 +195,7 @@ mod tests {
 
     #[test]
     fn test_add_lines_with_test_input() {
-        let lines = read_input("inputs/day5_test.txt").unwrap();
+        let lines = read_input("../inputs/day5_test.txt").unwrap();
         let (width, height) = determine_world_size(&lines);
 
         let mut map = WorldMap::with_size(width + 1, height + 1);
@@ -210,7 +210,7 @@ mod tests {
 
     #[test]
     fn test_add_lines_with_input() {
-        let lines = read_input("inputs/day5.txt").unwrap();
+        let lines = read_input("../inputs/day5.txt").unwrap();
         let (width, height) = determine_world_size(&lines);
 
         let mut map = WorldMap::with_size(width + 1, height + 1);
@@ -224,7 +224,7 @@ mod tests {
 
     #[test]
     fn test_add_lines_v2_with_test_input() {
-        let lines = read_input("inputs/day5_test.txt").unwrap();
+        let lines = read_input("../inputs/day5_test.txt").unwrap();
         let (width, height) = determine_world_size(&lines);
 
         let mut map = WorldMap::with_size(width + 1, height + 1);
@@ -239,7 +239,7 @@ mod tests {
 
     #[test]
     fn test_add_lines_v2_with_input() {
-        let lines = read_input("inputs/day5.txt").unwrap();
+        let lines = read_input("../inputs/day5.txt").unwrap();
         let (width, height) = determine_world_size(&lines);
 
         let mut map = WorldMap::with_size(width + 1, height + 1);

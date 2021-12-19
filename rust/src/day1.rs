@@ -68,10 +68,10 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        println!("{}", part1("inputs/day1.txt").unwrap());
+        println!("{}", part1("../inputs/day1.txt").unwrap());
     }
     #[test]
     fn test_part2() {
-        println!("{}", part2("inputs/day1.txt").unwrap());
+        println!("{}", part2("../inputs/day1.txt").unwrap());
     }
 }

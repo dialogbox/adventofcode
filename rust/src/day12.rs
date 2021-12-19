@@ -184,14 +184,14 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let input = read_input("inputs/day12_test.txt").unwrap();
+        let input = read_input("../inputs/day12_test.txt").unwrap();
 
         println!("{:?}", input);
     }
 
     #[test]
     fn test_part1() {
-        let map = read_input("inputs/day12_test.txt").unwrap();
+        let map = read_input("../inputs/day12_test.txt").unwrap();
 
         let paths = find_paths(&map, 1);
 
@@ -204,7 +204,7 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let map = read_input("inputs/day12.txt").unwrap();
+        let map = read_input("../inputs/day12.txt").unwrap();
 
         let paths = find_paths(&map, 1);
 
@@ -217,7 +217,7 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        let map = read_input("inputs/day12_test.txt").unwrap();
+        let map = read_input("../inputs/day12_test.txt").unwrap();
 
         let paths = find_paths(&map, 2);
 
@@ -230,7 +230,7 @@ mod tests {
 
     #[test]
     fn do_part2() {
-        let map = read_input("inputs/day12.txt").unwrap();
+        let map = read_input("../inputs/day12.txt").unwrap();
 
         let paths = find_paths(&map, 2);
 

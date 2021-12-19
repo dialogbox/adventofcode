@@ -123,14 +123,14 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let input = read_input("inputs/day11_test.txt").unwrap();
+        let input = read_input("../inputs/day11_test.txt").unwrap();
 
         print_status(&input);
     }
 
     #[test]
     fn test_part1() {
-        let mut input = read_input("inputs/day11_test.txt").unwrap();
+        let mut input = read_input("../inputs/day11_test.txt").unwrap();
 
         let mut result = 0;
         for _ in 0..100 {
@@ -142,7 +142,7 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let mut input = read_input("inputs/day11.txt").unwrap();
+        let mut input = read_input("../inputs/day11.txt").unwrap();
 
         let mut result = 0;
         for _ in 0..100 {
@@ -154,7 +154,7 @@ mod tests {
 
     #[test]
     fn test_part2() {
-        let mut input = read_input("inputs/day11_test.txt").unwrap();
+        let mut input = read_input("../inputs/day11_test.txt").unwrap();
 
         let mut result = None;
         for i in 0..1000 {
@@ -171,7 +171,7 @@ mod tests {
 
     #[test]
     fn do_part2() {
-        let mut input = read_input("inputs/day11.txt").unwrap();
+        let mut input = read_input("../inputs/day11.txt").unwrap();
 
         let mut result = None;
         for i in 0..1000 {

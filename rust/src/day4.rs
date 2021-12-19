@@ -210,7 +210,7 @@ mod tests {
 
     #[test]
     fn test_read_game() {
-        let game = BingoGame::from_input_file("inputs/day4.txt").unwrap();
+        let game = BingoGame::from_input_file("../inputs/day4.txt").unwrap();
 
         println!("{:?}", game.draws);
         println!("{:?}", game.drawn);
@@ -222,7 +222,7 @@ mod tests {
 
     #[test]
     fn test_do_game() {
-        let mut game = BingoGame::from_input_file("inputs/day4.txt").unwrap();
+        let mut game = BingoGame::from_input_file("../inputs/day4.txt").unwrap();
 
         let winner = game.do_game().unwrap();
 
@@ -232,7 +232,7 @@ mod tests {
 
     #[test]
     fn test_do_game_part2() {
-        let mut game = BingoGame::from_input_file("inputs/day4.txt").unwrap();
+        let mut game = BingoGame::from_input_file("../inputs/day4.txt").unwrap();
 
         let winner = game.do_game_part2().unwrap();
 

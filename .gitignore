@@ -1,4 +1,4 @@
-/target
+rust/target
 Cargo.lock
 .ipynb_checkpoints
 # Byte-compiled / optimized / DLL files

@@ -202,14 +202,14 @@ mod test {
 
     #[test]
     fn test_read_input() {
-        let v = read_input("inputs/day18_test.txt").unwrap();
+        let v = read_input("../inputs/day18_test.txt").unwrap();
 
         print_expr(v.first().unwrap());
     }
 
     #[test]
     fn test_explode() {
-        let v = read_input("inputs/day18_test.txt").unwrap();
+        let v = read_input("../inputs/day18_test.txt").unwrap();
 
         let mut new_expr = add_exprs(&v[0], &v[1]);
         reduce(&mut new_expr);
@@ -219,7 +219,7 @@ mod test {
 
     #[test]
     fn test_part1() {
-        let v = read_input("inputs/day18_test.txt").unwrap();
+        let v = read_input("../inputs/day18_test.txt").unwrap();
 
         let mut iter = v.iter();
 
@@ -238,7 +238,7 @@ mod test {
 
     #[test]
     fn do_part1() {
-        let v = read_input("inputs/day18.txt").unwrap();
+        let v = read_input("../inputs/day18.txt").unwrap();
 
         let mut iter = v.iter();
 
@@ -257,7 +257,7 @@ mod test {
 
     #[test]
     fn test_part2() {
-        let v = read_input("inputs/day18_test.txt").unwrap();
+        let v = read_input("../inputs/day18_test.txt").unwrap();
 
         let (m, (i, j)) = possible_max_add(&v);
 
@@ -268,7 +268,7 @@ mod test {
 
     #[test]
     fn do_part2() {
-        let v = read_input("inputs/day18.txt").unwrap();
+        let v = read_input("../inputs/day18.txt").unwrap();
 
         let (m, (i, j)) = possible_max_add(&v);
 

@@ -48,7 +48,7 @@ mod tests {
 
     #[test]
     fn test_read_input() {
-        let nums = read_input("inputs/day6_test.txt").unwrap();
+        let nums = read_input("../inputs/day6_test.txt").unwrap();
         let fishs = compress_input(&nums);
 
         println!("{:?}", fishs);
@@ -56,7 +56,7 @@ mod tests {
 
     #[test]
     fn test_play() {
-        let nums = read_input("inputs/day6_test.txt").unwrap();
+        let nums = read_input("../inputs/day6_test.txt").unwrap();
         let mut fishes = compress_input(&nums);
 
         println!("{:?}", fishes);
@@ -68,7 +68,7 @@ mod tests {
 
     #[test]
     fn do_part1() {
-        let nums = read_input("inputs/day6.txt").unwrap();
+        let nums = read_input("../inputs/day6.txt").unwrap();
         let mut fishes = compress_input(&nums);
 
         println!("{:?}", fishes);
@@ -81,7 +81,7 @@ mod tests {
 
     #[test]
     fn do_part2() {
-        let nums = read_input("inputs/day6.txt").unwrap();
+        let nums = read_input("../inputs/day6.txt").unwrap();
         let mut fishes = compress_input(&nums);
 
         println!("{:?}", fishes);
