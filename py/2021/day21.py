@@ -3,6 +3,7 @@ import numpy as np
 from numpy.core.fromnumeric import shape
 from functools import cache
 from itertools import product
+import utils
 
 def dice():
   while True:
@@ -76,17 +77,17 @@ def play_dd(pos1, pos2, score1, score2) -> Tuple[int, int]:
 
   return (p1_win, p2_win)
 
+def parse_input(path):
+  return utils.read_number_lines(path)
 
-if __name__ == '__main__':
-  # test input
-  # players = [4, 8]
-  # my input
-  players = [5, 9]
+def part1(path):
+  players = parse_input(path)
 
-  print("Part 1")
   result = play(players[0], players[1], dice(), 1000)
   print(result[0] * result[1])
 
-  print("Part 2")
+def part2(path):
+  players = parse_input(path)
+
   result = play_dd(players[0]-1, players[1]-1, 0, 0)
-  print(result)
+  print(result[0])

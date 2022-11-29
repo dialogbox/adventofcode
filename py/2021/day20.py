@@ -1,6 +1,6 @@
 import numpy as np
 
-def improve(input, background):
+def improve(algo, input, background):
   image = np.array([[1 if c == '#' else 0 for c in l] for l in input])
 
   height, width = image.shape
@@ -34,18 +34,31 @@ def next_background(b0, b511):
     while True:
       yield 1
 
-if __name__ == '__main__':
-  f = open('inputs/day20.txt', 'r')
+def parse_input(path):
+  f = open(path, 'r')
   algo = f.readline().strip()
   f.readline()
   image = np.array([[c for c in l.strip()] for l in f])
 
+  return algo, image
+
+def improve_n(algo, image, n):
   backgroud_iter = next_background(algo[0], algo[-1])
 
-  print_image(image)
-  for i in range(50):
-    image = improve(image, next(backgroud_iter))
+#  print_image(image)
+  for i in range(n):
+    image = improve(algo, image, next(backgroud_iter))
 
-  print_image(image)
+#  print_image(image)
 
   print(len(image[image == '#']))
+
+def part1(path):
+  algo, image = parse_input(path)
+
+  improve_n(algo, image, 2)
+
+def part2(path):
+  algo, image = parse_input(path)
+
+  improve_n(algo, image, 50)

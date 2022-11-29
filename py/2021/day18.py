@@ -112,7 +112,7 @@ def reduce(expr):
             break
 
 
-def part1(data):
+def solve_part1(data):
     cur = data[0]
     for l in data[1:]:
         cur = add(cur, l)
@@ -121,7 +121,7 @@ def part1(data):
     return magnitude(cur)
 
 
-def part2(data):
+def solve_part2(data):
     result = []
     nexpr = len(data)
     n = 0
@@ -134,14 +134,18 @@ def part2(data):
             n += 1
     return max(result)
 
+def parse_input(path):
+    lines = utils.read_lines(path)
 
-if __name__ == '__main__':
-    lines = utils.read_lines("inputs/day18.txt")
+    return [list(parse_pair(line)) for line in lines]
 
-    data = [list(parse_pair(line)) for line in lines]
+def part1(path):
+    data = parse_input(path)
 
-    m = part1(copy.deepcopy(data))
-    print(f"Part 1: {m}")
+    print(solve_part1(copy.deepcopy(data)))
 
-    m = part2(copy.deepcopy(data))
-    print(f"Part 2: {m}")
+
+def part2(path):
+    data = parse_input(path)
+
+    print(solve_part2(copy.deepcopy(data)))
