@@ -33,3 +33,7 @@ def read_number_lines(filename):
     lines = [int(line.strip()) for line in f]
 
     return lines
+
+def readall(filename):
+    f = open(filename, "r")
+    return f.read()
