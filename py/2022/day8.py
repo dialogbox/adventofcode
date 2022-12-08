@@ -9,44 +9,34 @@ def parse_input(path):
     return grid
 
 
-def visible_trees(npgrid):
-    (h, w) = npgrid.shape
+def visible_trees(grid):
+    (h, w) = grid.shape
 
-    visible = np.reshape(np.array([False] * h * w), [h, w])
-    visible[0, :] = True
-    visible[-1, :] = True
-    visible[:, 0] = True
-    visible[:, -1] = True
+    visible = np.full(grid.shape, False)
 
-    for i in range(1, h - 1):
-        # left to right
-        curmax = npgrid[i, 0]
-        for j in range(1, w - 1):
-            if npgrid[i, j] > curmax:
-                visible[i, j] = True
-                curmax = npgrid[i, j]
+    curmax = np.full(h, -1)
+    for i in range(w):
+        newvisible = curmax < grid[:, i]
+        curmax[newvisible] = grid[:, i][newvisible]
+        visible[:, i] = visible[:, i] | newvisible
 
-        # right to left
-        curmax = npgrid[i, -1]
-        for j in range(w - 2, 0, -1):
-            if npgrid[i, j] > curmax:
-                visible[i, j] = True
-                curmax = npgrid[i, j]
+    curmax = np.full(h, -1)
+    for i in range(w - 1, -1, -1):
+        newvisible = curmax < grid[:, i]
+        curmax[newvisible] = grid[:, i][newvisible]
+        visible[:, i] = visible[:, i] | newvisible
 
-    for j in range(1, w - 1):
-        # top to bottom
-        curmax = npgrid[0, j]
-        for i in range(1, h - 1):
-            if npgrid[i, j] > curmax:
-                visible[i, j] = True
-                curmax = npgrid[i, j]
+    curmax = np.full(w, -1)
+    for i in range(h):
+        newvisible = curmax < grid[i, :]
+        curmax[newvisible] = grid[i, :][newvisible]
+        visible[i, :] = visible[i, :] | newvisible
 
-        # bottom to top
-        curmax = npgrid[-1, j]
-        for i in range(h - 2, 0, -1):
-            if npgrid[i, j] > curmax:
-                visible[i, j] = True
-                curmax = npgrid[i, j]
+    curmax = np.full(w, -1)
+    for i in range(h - 1, -1, -1):
+        newvisible = curmax < grid[i, :]
+        curmax[newvisible] = grid[i, :][newvisible]
+        visible[i, :] = visible[i, :] | newvisible
 
     return visible
 
@@ -90,4 +80,4 @@ def part2(path):
     grid = parse_input(path)
     score = scenic_score(np.array(grid))
 
-    print(np.max(score))
+    print(int(np.amax(score)))
