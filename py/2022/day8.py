@@ -42,14 +42,13 @@ def visible_trees(grid):
 
 
 def score_onedirection(view, cur):
-    view = list(view)
-    score = 0
-    for i in view:
-        score += 1
-        if i >= cur:
-            break
-
-    return score
+    if view.size == 0:
+        return 0
+    idx = np.argmax(view >= cur)
+    # we do this because  argmax return 0 when all false
+    if idx == 0 and view[idx] < cur:
+        return view.size
+    return idx + 1
 
 
 def scenic_score(grid):
@@ -59,9 +58,9 @@ def scenic_score(grid):
     for i in range(1, h - 1):
         for j in range(1, w - 1):
             cur = grid[i, j]
-            left_score = score_onedirection(reversed(grid[i, 0:j]), cur)
+            left_score = score_onedirection(grid[i, j - 1::-1], cur)
             right_score = score_onedirection(grid[i, j + 1:], cur)
-            up_score = score_onedirection(reversed(grid[0:i, j]), cur)
+            up_score = score_onedirection(grid[i - 1::-1, j], cur)
             down_score = score_onedirection(grid[i + 1:, j], cur)
 
             score[i, j] = int(left_score * right_score * up_score * down_score)
