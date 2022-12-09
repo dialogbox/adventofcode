@@ -7,114 +7,112 @@ def parse_input(path):
     return [(d, int(n)) for [d, n] in [l.split(" ") for l in lines]]
 
 
-def move_up(h, t, n):
-    curh = h
-    curt = t
+def move_tail(h, t):
+    (hx, hy) = h
+    (tx, ty) = t
 
-    tail_visited = set([t])
-    for i in range(n):
-        (hx, hy) = curh
-        (tx, ty) = curt
-        curh = (hx, hy + 1)
-        if hx != tx:
-            if hy > ty:
-                curt = (hx, ty + 1)
+    if hx == tx:
+        if hy > ty:
+            return (tx, hy - 1)
+        elif hy < ty:
+            return (tx, hy + 1)
         else:
-            if hy > ty:
-                curt = (tx, ty + 1)
-        tail_visited.add(curt)
-
-    return (curh, curt, tail_visited)
-
-
-def move_down(h, t, n):
-    curh = h
-    curt = t
-
-    tail_visited = set([t])
-    for i in range(n):
-        (hx, hy) = curh
-        (tx, ty) = curt
-        curh = (hx, hy - 1)
-        if hx != tx:
-            if hy < ty:
-                curt = (hx, ty - 1)
+            return t
+    elif hy == ty:
+        if hx > tx:
+            return (hx - 1, ty)
+        elif hx < tx:
+            return (hx + 1, ty)
         else:
-            if hy < ty:
-                curt = (tx, ty - 1)
-        tail_visited.add(curt)
+            return t
 
-    return (curh, curt, tail_visited)
+    if abs(hx - tx) == 1 and abs(hy - ty) == 1:
+        return t
+
+    if hx > tx:
+        tx += 1
+    else:
+        tx -= 1
+
+    if hy > ty:
+        ty += 1
+    else:
+        ty -= 1
+
+    return (tx, ty)
 
 
-def move_right(h, t, n):
-    curh = h
-    curt = t
+def fix_rope(rope):
+    for i in range(len(rope) - 1):
+        rope[i + 1] = move_tail(rope[i], rope[i + 1])
 
-    tail_visited = set([t])
+
+def move_up(rope, n):
+    tail_visited = set([rope[-1]])
     for i in range(n):
-        (hx, hy) = curh
-        (tx, ty) = curt
-        curh = (hx + 1, hy)
-        if hy != ty:
-            if hx > tx:
-                curt = (tx + 1, hy)
-        else:
-            if hx > tx:
-                curt = (tx + 1, ty)
-        tail_visited.add(curt)
+        rope[0] = (rope[0][0], rope[0][1] + 1)
+        fix_rope(rope)
+        tail_visited.add(rope[-1])
 
-    return (curh, curt, tail_visited)
+    return (rope, tail_visited)
 
 
-def move_left(h, t, n):
-    curh = h
-    curt = t
-
-    tail_visited = set([t])
+def move_down(rope, n):
+    tail_visited = set([rope[-1]])
     for i in range(n):
-        (hx, hy) = curh
-        (tx, ty) = curt
-        curh = (hx - 1, hy)
-        if hy != ty:
-            if hx < tx:
-                curt = (tx - 1, hy)
-        else:
-            if hx < tx:
-                curt = (tx - 1, ty)
-        tail_visited.add(curt)
+        rope[0] = (rope[0][0], rope[0][1] - 1)
+        fix_rope(rope)
+        tail_visited.add(rope[-1])
 
-    return (curh, curt, tail_visited)
+    return (rope, tail_visited)
+
+
+def move_right(rope, n):
+    tail_visited = set([rope[-1]])
+    for i in range(n):
+        rope[0] = (rope[0][0] + 1, rope[0][1])
+        fix_rope(rope)
+        tail_visited.add(rope[-1])
+
+    return (rope, tail_visited)
+
+
+def move_left(rope, n):
+    tail_visited = set([rope[-1]])
+    for i in range(n):
+        rope[0] = (rope[0][0] - 1, rope[0][1])
+        fix_rope(rope)
+        tail_visited.add(rope[-1])
+
+    return (rope, tail_visited)
+
+
+def simulate(rope, moves):
+    tail_visited = set([rope[-1]])
+    for m in moves:
+        if m[0] == "U":
+            (rope, new_tail_visited) = move_up(rope, m[1])
+            tail_visited = tail_visited.union(new_tail_visited)
+        elif m[0] == "D":
+            (rope, new_tail_visited) = move_down(rope, m[1])
+            tail_visited = tail_visited.union(new_tail_visited)
+        elif m[0] == "R":
+            (rope, new_tail_visited) = move_right(rope, m[1])
+            tail_visited = tail_visited.union(new_tail_visited)
+        elif m[0] == "L":
+            (rope, new_tail_visited) = move_left(rope, m[1])
+            tail_visited = tail_visited.union(new_tail_visited)
+
+    return (rope, tail_visited)
 
 
 def part1(path):
     data = list(parse_input(path))
-
-    curh = (0, 0)
-    curt = (0, 0)
-
-    tail_visited = set()
-    tail_visited.add((0, 0))
-    for m in data:
-        if m[0] == "U":
-            (curh, curt, new_tail_visited) = move_up(curh, curt, m[1])
-            tail_visited = tail_visited.union(new_tail_visited)
-        elif m[0] == "D":
-            (curh, curt, new_tail_visited) = move_down(curh, curt, m[1])
-            tail_visited = tail_visited.union(new_tail_visited)
-        elif m[0] == "R":
-            (curh, curt, new_tail_visited) = move_right(curh, curt, m[1])
-            tail_visited = tail_visited.union(new_tail_visited)
-        elif m[0] == "L":
-            (curh, curt, new_tail_visited) = move_left(curh, curt, m[1])
-            tail_visited = tail_visited.union(new_tail_visited)
-
+    (_, tail_visited) = simulate([(0, 0)] * 2, data)
     print(len(tail_visited))
 
 
 def part2(path):
-    data = parse_input(path)
-
-    data = sorted(data, key=lambda a: -a[0])
-
-    print(data[0][0] + data[1][0] + data[2][0])
+    data = list(parse_input(path))
+    (_, tail_visited) = simulate([(0, 0)] * 10, data)
+    print(len(tail_visited))
