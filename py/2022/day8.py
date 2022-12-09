@@ -1,6 +1,5 @@
 import utils
 import numpy as np
-import bisect
 
 
 def parse_input(path):
