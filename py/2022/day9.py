@@ -31,9 +31,9 @@ def fix_one_knot(h, t):
     (tx, ty) = t
 
     x_dist = abs(hx - tx)
-    x_dir = (hx - tx) / x_dist if x_dist > 0 else 0
+    x_dir = (hx - tx) // x_dist if x_dist > 0 else 0
     y_dist = abs(hy - ty)
-    y_dir = (hy - ty) / y_dist if y_dist > 0 else 0
+    y_dir = (hy - ty) // y_dist if y_dist > 0 else 0
 
     if x_dist <= 1 and y_dist <= 1:
         return t
