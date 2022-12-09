@@ -27,7 +27,7 @@ def fix_rope(rope):
         rope[i + 1] = move_one_knot(rope[i], rope[i + 1])
 
 
-def move_up(rope, n):
+def move_head_up(rope, n):
     tail_visited = set([rope[-1]])
     for i in range(n):
         rope[0] = (rope[0][0], rope[0][1] + 1)
@@ -37,7 +37,7 @@ def move_up(rope, n):
     return (rope, tail_visited)
 
 
-def move_down(rope, n):
+def move_head_down(rope, n):
     tail_visited = set([rope[-1]])
     for i in range(n):
         rope[0] = (rope[0][0], rope[0][1] - 1)
@@ -47,7 +47,7 @@ def move_down(rope, n):
     return (rope, tail_visited)
 
 
-def move_right(rope, n):
+def move_head_right(rope, n):
     tail_visited = set([rope[-1]])
     for i in range(n):
         rope[0] = (rope[0][0] + 1, rope[0][1])
@@ -57,7 +57,7 @@ def move_right(rope, n):
     return (rope, tail_visited)
 
 
-def move_left(rope, n):
+def move_head_left(rope, n):
     tail_visited = set([rope[-1]])
     for i in range(n):
         rope[0] = (rope[0][0] - 1, rope[0][1])
@@ -71,16 +71,16 @@ def simulate(rope, moves):
     tail_visited = set([rope[-1]])
     for m in moves:
         if m[0] == "U":
-            (rope, new_tail_visited) = move_up(rope, m[1])
+            (rope, new_tail_visited) = move_head_up(rope, m[1])
             tail_visited = tail_visited.union(new_tail_visited)
         elif m[0] == "D":
-            (rope, new_tail_visited) = move_down(rope, m[1])
+            (rope, new_tail_visited) = move_head_down(rope, m[1])
             tail_visited = tail_visited.union(new_tail_visited)
         elif m[0] == "R":
-            (rope, new_tail_visited) = move_right(rope, m[1])
+            (rope, new_tail_visited) = move_head_right(rope, m[1])
             tail_visited = tail_visited.union(new_tail_visited)
         elif m[0] == "L":
-            (rope, new_tail_visited) = move_left(rope, m[1])
+            (rope, new_tail_visited) = move_head_left(rope, m[1])
             tail_visited = tail_visited.union(new_tail_visited)
 
     return (rope, tail_visited)
