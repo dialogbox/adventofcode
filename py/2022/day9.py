@@ -7,44 +7,24 @@ def parse_input(path):
     return [(d, int(n)) for [d, n] in [l.split(" ") for l in lines]]
 
 
-def move_tail(h, t):
+def move_one_knot(h, t):
     (hx, hy) = h
     (tx, ty) = t
 
-    if hx == tx:
-        if hy > ty:
-            return (tx, hy - 1)
-        elif hy < ty:
-            return (tx, hy + 1)
-        else:
-            return t
-    elif hy == ty:
-        if hx > tx:
-            return (hx - 1, ty)
-        elif hx < tx:
-            return (hx + 1, ty)
-        else:
-            return t
+    x_dist = abs(hx - tx)
+    x_dir = (hx - tx) / x_dist if x_dist > 0 else 0
+    y_dist = abs(hy - ty)
+    y_dir = (hy - ty) / y_dist if y_dist > 0 else 0
 
-    if abs(hx - tx) == 1 and abs(hy - ty) == 1:
+    if x_dist <= 1 and y_dist <= 1:
         return t
 
-    if hx > tx:
-        tx += 1
-    else:
-        tx -= 1
-
-    if hy > ty:
-        ty += 1
-    else:
-        ty -= 1
-
-    return (tx, ty)
+    return (tx + x_dir, ty + y_dir)
 
 
 def fix_rope(rope):
     for i in range(len(rope) - 1):
-        rope[i + 1] = move_tail(rope[i], rope[i + 1])
+        rope[i + 1] = move_one_knot(rope[i], rope[i + 1])
 
 
 def move_up(rope, n):
