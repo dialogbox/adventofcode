@@ -10,9 +10,8 @@ def parse_input(path):
     for mstr in inputstr.split("\n\n"):
         temp = [l.split(": ")[1] for l in mstr.split("\n")[1:]]
         items = [int(i) for i in temp[0].split(", ")]
-        [op1, op2] = temp[1].split()[3:]
-        op = ("^", 2) if op2 == "old" else (op1, int(op2))
-
+        opstr = temp[1].strip()
+        op = opstr
         test_data = [int(l.split()[-1]) for l in temp[2:]]
 
         result.append((items, op, test_data))
@@ -20,19 +19,18 @@ def parse_input(path):
     return result
 
 
+def run_op(op, old):
+    ldict = {"old": old, "new": 0}
+    exec(op, globals(), ldict)
+    # print(op, old, ldict["new"])
+    return ldict["new"]
+
+
 def do_round(status, ninspect, manage_worry):
     for i, m in enumerate(status):
         ninspect[i] += len(m[0])
         for item in m[0]:
-            (op1, op2) = m[1]
-            n = 0
-            if op1 == "+":
-                n = item + op2
-            elif op1 == "*":
-                n = item * op2
-            elif op1 == "^":
-                n = item * item
-            n = manage_worry(n)
+            n = manage_worry(run_op(m[1], item))
             (divd, tv, fv) = m[2]
             next_monkey = tv if n % divd == 0 else fv
             status[next_monkey][0].append(n)
