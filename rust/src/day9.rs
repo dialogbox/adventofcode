@@ -1,10 +1,10 @@
 use std::collections::HashSet;
 
-use super::input_lines;
+use super::read_raw_lines;
 
 #[allow(dead_code)]
 fn read_input(filename: &str) -> std::io::Result<Vec<Vec<u8>>> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
 
     let mut result = Vec::new();
 

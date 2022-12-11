@@ -1,8 +1,8 @@
-use super::input_lines;
+use super::read_raw_lines;
 
 #[allow(dead_code)]
 fn read_input(filename: &str) -> std::io::Result<[[u8; 10]; 10]> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
 
     let mut result = [[0; 10]; 10];
 

@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use super::input_lines;
+use super::read_raw_lines;
 
 const BINGO_BOARD_COLS: usize = 5;
 const BINGO_BOARD_ROWS: usize = 5;
@@ -114,7 +114,7 @@ pub struct BingoGame {
 impl BingoGame {
     #[allow(dead_code)]
     pub fn from_input_file(filename: &str) -> std::io::Result<BingoGame> {
-        let mut lines = input_lines(filename)?;
+        let mut lines = read_raw_lines(filename)?;
 
         let draws = lines
             .next()

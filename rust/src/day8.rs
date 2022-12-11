@@ -1,4 +1,4 @@
-use super::input_lines;
+use super::read_raw_lines;
 
 #[derive(Debug)]
 struct Entry {
@@ -130,7 +130,7 @@ impl Entry {
 
 #[allow(dead_code)]
 fn read_input(filename: &str) -> std::io::Result<Vec<Entry>> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
 
     let mut result = Vec::new();
 

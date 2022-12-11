@@ -1,8 +1,8 @@
-use super::input_lines;
+use super::read_raw_lines;
 
 #[allow(dead_code)]
 fn read_input(filename: &str) -> std::io::Result<Vec<i32>> {
-    let line = input_lines(filename)?.next().unwrap()?;
+    let line = read_raw_lines(filename)?.next().unwrap()?;
 
     let mut nums = line
         .split(',')

@@ -1,21 +1,19 @@
-use super::input_lines;
+use super::read_raw_lines;
+use crate::read_num_lines_input;
 use std::collections::VecDeque;
 
 #[allow(dead_code)]
 pub fn part1(filename: &str) -> std::io::Result<i32> {
-    let lines = input_lines(filename)?;
+    let measurements = read_num_lines_input(filename)?;
 
-    let mut cur: u16 = u16::MAX;
+    let mut cur: u32 = u32::MAX;
     let mut result = 0;
 
-    lines.for_each(|line| {
-        if let Ok(measurement) = line {
-            let m = measurement.parse::<u16>().unwrap();
-            if m > cur {
-                result += 1;
-            }
-            cur = m;
+    measurements.iter().for_each(|m| {
+        if *m > cur {
+            result += 1;
         }
+        cur = *m;
     });
 
     Ok(result)
@@ -23,7 +21,7 @@ pub fn part1(filename: &str) -> std::io::Result<i32> {
 
 #[allow(dead_code)]
 pub fn part2(filename: &str) -> std::io::Result<i32> {
-    let mut lines = input_lines(filename)?;
+    let mut lines = read_raw_lines(filename)?;
 
     let mut window: VecDeque<u16> = VecDeque::with_capacity(3);
     let mut cur: u16 = 0;
@@ -70,6 +68,7 @@ mod tests {
     fn test_part1() {
         println!("{}", part1("../inputs/day1.txt").unwrap());
     }
+
     #[test]
     fn test_part2() {
         println!("{}", part2("../inputs/day1.txt").unwrap());

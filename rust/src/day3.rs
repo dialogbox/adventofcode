@@ -1,4 +1,4 @@
-use super::input_lines;
+use super::read_raw_lines;
 
 /*
  * This code assums the input text file is sorted before hand.
@@ -7,7 +7,7 @@ use super::input_lines;
 
 #[allow(dead_code)]
 pub fn read_report(filename: &str) -> std::io::Result<Vec<String>> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
     Ok(lines.map(|l| l.unwrap()).collect())
 }
 

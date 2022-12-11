@@ -20,6 +20,7 @@ def read_number_grid(filename):
     lines = read_lines(filename)
     return [[int(n) for n in list(line)] for line in lines]
 
+
 def read_number_pair_csv(filename, pair_sep):
     lines = read_csv(filename)
 
@@ -38,6 +39,12 @@ def read_number_lines(filename):
 
     return lines
 
+
 def readall(filename):
     f = open(filename, "r")
     return f.read()
+
+
+def print_line_by_line(somelist):
+    for l in somelist:
+        print(l)

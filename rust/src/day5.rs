@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use super::input_lines;
+use super::read_raw_lines;
 
 pub struct Line {
     p1: (usize, usize),
@@ -113,7 +113,7 @@ impl WorldMap {
 
 #[allow(dead_code)]
 pub fn read_input(filename: &str) -> std::io::Result<Vec<Line>> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
 
     let mut result: Vec<Line> = Vec::new();
 

@@ -1,10 +1,10 @@
 use std::cmp::max;
 
-use super::input_lines;
+use super::read_raw_lines;
 
 #[allow(dead_code)]
 fn read_folding_input(filename: &str) -> std::io::Result<Vec<(char, usize)>> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
 
     let mut result = Vec::new();
 
@@ -22,7 +22,7 @@ fn read_folding_input(filename: &str) -> std::io::Result<Vec<(char, usize)>> {
 
 #[allow(dead_code)]
 fn read_coords(filename: &str) -> std::io::Result<Vec<(usize, usize)>> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
 
     let mut result = Vec::new();
 

@@ -1,5 +1,8 @@
-map = [list(l)
-       for l in open("./inputs/day25.txt", "r").read().splitlines()]
+#
+# This is a legacy standalone script
+# python3 dayXX.py
+#
+map = [list(l) for l in open("./inputs/day25.txt", "r").read().splitlines()]
 
 width = len(map[0])
 height = len(map)
@@ -12,11 +15,11 @@ def move_down(current):
             if current[y][x] != 'v':
                 continue
 
-            if current[(y+1) % height][x] == '.':
+            if current[(y + 1) % height][x] == '.':
                 moves.append((x, y))
 
     for (x, y) in moves:
-        current[(y+1) % height][x] = 'v'
+        current[(y + 1) % height][x] = 'v'
         current[y][x] = '.'
 
     return len(moves)
@@ -29,11 +32,11 @@ def move_left(current):
             if current[y][x] != '>':
                 continue
 
-            if current[y][(x+1) % width] == '.':
+            if current[y][(x + 1) % width] == '.':
                 moves.append((x, y))
 
     for (x, y) in moves:
-        current[y][(x+1) % width] = '>'
+        current[y][(x + 1) % width] = '>'
         current[y][x] = '.'
 
     return len(moves)

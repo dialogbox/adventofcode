@@ -1,9 +1,15 @@
+#
+# This is a legacy standalone script
+# python3 dayXX.py
+#
 import time
 from copy import deepcopy
 from functools import cache
 
-initial_status = [list(l[1:-1])
-                  for l in open("./inputs/day23part2.txt", "r").read().splitlines()[1:-1]]
+initial_status = [
+    list(l[1:-1]) for l in open("../../inputs/2021/day23part2.txt",
+                                "r").read().splitlines()[1:-1]
+]
 
 width = len(initial_status[0])
 
@@ -35,24 +41,24 @@ def find_move_outs(status, start_loc):
 
     cur = start_loc
     steps = vpos + 1
-    while cur > 0 and hallway[cur-1] == '.':
+    while cur > 0 and hallway[cur - 1] == '.':
         cur -= 1
         steps += 1
         if cur not in [2, 4, 6, 8]:
             new_map = deepcopy(status)
-            new_map[vpos+1][start_loc] = '.'
+            new_map[vpos + 1][start_loc] = '.'
             new_map[0][cur] = kind
 
             possibilities.append(tuple([new_map, steps * energe]))
 
     cur = start_loc
     steps = vpos + 1
-    while cur < width-1 and hallway[cur + 1] == '.':
+    while cur < width - 1 and hallway[cur + 1] == '.':
         cur += 1
         steps += 1
         if cur not in [2, 4, 6, 8]:
             new_map = deepcopy(status)
-            new_map[vpos+1][start_loc] = '.'
+            new_map[vpos + 1][start_loc] = '.'
             new_map[0][cur] = kind
 
             possibilities.append(tuple([new_map, steps * energe]))
@@ -84,27 +90,29 @@ def check_move_in(status, start_loc):
     # check if the hallway toward to the dest is clear
     if start_loc > target:
         # move left
-        if len(list(filter(lambda c: c != '.', hallway[target:start_loc]))) > 0:
+        if len(list(filter(lambda c: c != '.',
+                           hallway[target:start_loc]))) > 0:
             return []
         steps += start_loc - target
     else:
         # move right
-        if len(list(filter(lambda c: c != '.', hallway[start_loc+1:target+1]))) > 0:
+        if len(
+                list(
+                    filter(lambda c: c != '.',
+                           hallway[start_loc + 1:target + 1]))) > 0:
             return []
         steps += target - start_loc
 
     new_status = deepcopy(status)
     new_status[0][start_loc] = '.'
-    new_status[vpos+1][target] = kind
+    new_status[vpos + 1][target] = kind
 
     return [(new_status, steps * energe)]
 
 
 def is_done(status):
     for i in range(1, len(status)):
-        if (status[i][2] != 'A'
-            or status[i][4] != 'B'
-            or status[i][6] != 'C'
+        if (status[i][2] != 'A' or status[i][4] != 'B' or status[i][6] != 'C'
                 or status[i][8] != 'D'):
             return False
     return True
@@ -134,7 +142,8 @@ def cheapest(status_str):
             min_energe = min(min_energe, m[1])
         else:
             min_energe = min(
-                min_energe, m[1] + cheapest("\n".join(["".join(l) for l in m[0]])))
+                min_energe,
+                m[1] + cheapest("\n".join(["".join(l) for l in m[0]])))
 
     return min_energe
 

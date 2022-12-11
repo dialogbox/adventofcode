@@ -1,3 +1,6 @@
+# This is a legacy standalone script
+# python3 dayXX.py
+#
 from day22part2 import diff_range
 
 diff_range_test_data = [

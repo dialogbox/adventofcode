@@ -1,4 +1,4 @@
-use super::input_lines;
+use super::read_raw_lines;
 use std::{
     cell::RefCell,
     collections::HashMap,
@@ -52,7 +52,7 @@ impl Cave {
 
 #[allow(dead_code)]
 fn read_input(filename: &str) -> std::io::Result<HashMap<String, Rc<RefCell<Cave>>>> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
 
     let mut caves = HashMap::new();
 

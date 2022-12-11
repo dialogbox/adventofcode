@@ -20,13 +20,13 @@ mod day9;
 use std::fs::File;
 use std::io::{self, BufRead};
 
-pub fn input_lines(filename: &str) -> io::Result<io::Lines<io::BufReader<File>>> {
+pub fn read_raw_lines(filename: &str) -> io::Result<io::Lines<io::BufReader<File>>> {
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
 }
 
-pub fn read_table_input(filename: &str) -> std::io::Result<Vec<Vec<char>>> {
-    let lines = input_lines(filename)?;
+pub fn read_char_table(filename: &str) -> std::io::Result<Vec<Vec<char>>> {
+    let lines = read_raw_lines(filename)?;
 
     let mut result = Vec::new();
 
@@ -37,16 +37,27 @@ pub fn read_table_input(filename: &str) -> std::io::Result<Vec<Vec<char>>> {
     Ok(result)
 }
 
-pub fn read_u8_table_input(filename: &str) -> std::io::Result<Vec<Vec<u8>>> {
-    let table = read_table_input(filename)?;
+pub fn read_digit_table(filename: &str) -> std::io::Result<Vec<Vec<u8>>> {
+    let table = read_char_table(filename)?;
     let result = table
         .iter()
         .map(|l| {
             l.iter()
                 .map(|c| c.to_digit(10).unwrap() as u8)
-                .collect::<Vec<u8>>()
+                .collect::<Vec<_>>()
         })
         .collect();
+
+    Ok(result)
+}
+
+pub fn read_num_lines_input(filename: &str) -> std::io::Result<Vec<u32>> {
+    let file = File::open(filename)?;
+    let lines = io::BufReader::new(file).lines();
+
+    let result = lines
+        .map(|l| l.unwrap().parse::<u32>().unwrap())
+        .collect::<Vec<u32>>();
 
     Ok(result)
 }

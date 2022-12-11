@@ -1,10 +1,10 @@
 use std::fmt::Display;
 
-use super::input_lines;
+use super::read_raw_lines;
 
 #[allow(dead_code)]
 fn read_input(filename: &str) -> std::io::Result<Vec<bool>> {
-    let mut lines = input_lines(filename)?;
+    let mut lines = read_raw_lines(filename)?;
 
     let l = lines.next().unwrap()?;
 

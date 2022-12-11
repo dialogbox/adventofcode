@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::input_lines;
+use super::read_raw_lines;
 
 //
 // General idea here is instead of building concrate string, just maintain number of possible 2 char pairs
@@ -11,7 +11,7 @@ use super::input_lines;
 // Which means if there were n numbers of "HB", it will be n "HK"s and n "KB"s.
 #[allow(dead_code)]
 fn read_input(filename: &str) -> std::io::Result<(String, HashMap<[char; 2], char>)> {
-    let mut lines = input_lines(filename)?;
+    let mut lines = read_raw_lines(filename)?;
 
     let templ = lines.next().unwrap()?;
     lines.next();

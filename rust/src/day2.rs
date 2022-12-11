@@ -1,4 +1,4 @@
-use super::input_lines;
+use super::read_raw_lines;
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -29,7 +29,7 @@ pub struct Command {
 
 #[allow(dead_code)]
 pub fn read_plan(filename: &str) -> std::io::Result<Vec<Command>> {
-    let lines = input_lines(filename)?;
+    let lines = read_raw_lines(filename)?;
 
     let mut result: Vec<Command> = Vec::new();
 
