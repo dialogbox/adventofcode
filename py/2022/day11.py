@@ -1,77 +1,63 @@
-from __future__ import annotations
-
-
-data = [{
-    "items": [93, 54, 69, 66, 71],
-    "op": lambda o: o * 3,
-    "test": lambda i: 7 if i % 7 == 0 else 1
-}, {
-    "items": [89, 51, 80, 66],
-    "op": lambda o: o * 17,
-    "test": lambda i: 5 if i % 19 == 0 else 7
-}, {
-    "items": [90, 92, 63, 91, 96, 63, 64],
-    "op": lambda o: o + 1,
-    "test": lambda i: 4 if i % 13 == 0 else 3
-}, {
-    "items": [65, 77],
-    "op": lambda o: o + 2,
-    "test": lambda i: 4 if i % 3 == 0 else 6
-}, {
-    "items": [76, 68, 94],
-    "op": lambda o: o * o,
-    "test": lambda i: 0 if i % 2 == 0 else 6
-}, {
-    "items": [86, 65, 66, 97, 73, 83],
-    "op": lambda o: o + 8,
-    "test": lambda i: 2 if i % 11 == 0 else 3
-}, {
-    "items": [78],
-    "op": lambda o: o + 6,
-    "test": lambda i: 0 if i % 17 == 0 else 1
-}, {
-    "items": [89, 57, 59, 61, 87, 55, 55, 88],
-    "op": lambda o: o + 7,
-    "test": lambda i: 2 if i % 5 == 0 else 5
-}]
+import utils
+import math
 
 
 def parse_input(path):
-    return data
+    inputstr = utils.readall(path)
+
+    result = []
+
+    for mstr in inputstr.split("\n\n"):
+        temp = [l.split(": ")[1] for l in mstr.split("\n")[1:]]
+        items = [int(i) for i in temp[0].split(", ")]
+        [op1, op2] = temp[1].split()[3:]
+        op = ("^", 2) if op2 == "old" else (op1, int(op2))
+
+        test_data = [int(l.split()[-1]) for l in temp[2:]]
+
+        result.append((items, op, test_data))
+
+    return result
+
+
+def do_round(status, ninspect, manage_worry):
+    for i, m in enumerate(status):
+        ninspect[i] += len(m[0])
+        for item in m[0]:
+            (op1, op2) = m[1]
+            n = 0
+            if op1 == "+":
+                n = item + op2
+            elif op1 == "*":
+                n = item * op2
+            elif op1 == "^":
+                n = item * item
+            n = manage_worry(n)
+            (divd, tv, fv) = m[2]
+            next_monkey = tv if n % divd == 0 else fv
+            status[next_monkey][0].append(n)
+        m[0].clear()
 
 
 def part1(path):
-    monkeys = parse_input(path)
+    status = parse_input(path)
 
-    ninspect = [0] * len(monkeys)
+    ninspect = [0] * len(status)
 
     for round in range(20):
-        for i, m in enumerate(monkeys):
-            ninspect[i] += len(m["items"])
-            for item in m["items"]:
-                n = m["op"](item) // 3
-                next_monkey = m["test"](n)
-                monkeys[next_monkey]["items"].append(n)
-            m["items"] = []
+        do_round(status, ninspect, lambda n: n // 3)
 
-    ninspect = sorted(ninspect)
-    print(ninspect[-1] * ninspect[-2])
-
+    print(math.prod(sorted(ninspect)[-2:]))
 
 
 def part2(path):
-    monkeys = parse_input(path)
+    status = parse_input(path)
 
-    ninspect = [0] * len(monkeys)
+    ninspect = [0] * len(status)
 
-    for round in range(10000):
-        for i, m in enumerate(monkeys):
-            ninspect[i] += len(m["items"])
-            for item in m["items"]:
-                n = m["op"](item)
-                next_monkey = m["test"](n)
-                monkeys[next_monkey]["items"].append(n)
-            m["items"] = []
+    lcm = math.prod([m[2][0] for m in status])
 
-    ninspect = sorted(ninspect)
-    print(ninspect[-1] * ninspect[-2])
+    for _ in range(10000):
+        do_round(status, ninspect, lambda n: n % lcm)
+
+    print(math.prod(sorted(ninspect)[-2:]))
