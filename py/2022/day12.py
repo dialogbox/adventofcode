@@ -25,10 +25,10 @@ def parse_input(path):
     for y, l in enumerate(result):
         for x, c in enumerate(l):
             if c == ord('S') - ord('a'):
-                STARTPOS = (x, y)
+                STARTPOS = (y, x)
                 result[y][x] = 0
             elif c == ord('E') - ord('a'):
-                ENDPOS = (x, y)
+                ENDPOS = (y, x)
                 result[y][x] = ord('z') - ord('a')
 
     result = np.array(result)
@@ -38,7 +38,7 @@ def parse_input(path):
 
 def find_path_dijkstra(grid, startpos, endpos):
     print(f"From: {startpos}, To: {endpos}")
-    dist_heap = [[0 if (x, y) == startpos else sys.maxsize, (x, y)]
+    dist_heap = [[0 if (y, x) == startpos else sys.maxsize, (y, x)]
                  for x in range(WIDTH) for y in range(HEIGHT)]
 
     nodes = dict(zip([n[1] for n in dist_heap], dist_heap))
@@ -48,17 +48,17 @@ def find_path_dijkstra(grid, startpos, endpos):
     heapq.heapify(dist_heap)
 
     while len(dist_heap) > 0 and dist_heap[0][0] != sys.maxsize:
-        [curdist, (x, y)] = dist_heap[0]
-        path.append((x, y))
-        if (x, y) == endpos:
+        [curdist, (y, x)] = dist_heap[0]
+        path.append((y, x))
+        if (y, x) == endpos:
             break
 
-        for (nx, ny) in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]:
+        for (ny, nx) in [(y, x - 1), (y, x + 1), (y - 1, x), (y + 1, x)]:
             if nx >= 0 and nx <= WIDTH - 1 and ny >= 0 and ny <= HEIGHT - 1:
-                if (nx, ny) not in visited and grid[ny, nx] <= grid[y, x] + 1:
-                    if nodes[(nx, ny)][0] > curdist + 1:
-                        nodes[(nx, ny)][0] = curdist + 1
-        visited.add((x, y))
+                if (ny, nx) not in visited and grid[ny, nx] <= grid[y, x] + 1:
+                    if nodes[(ny, nx)][0] > curdist + 1:
+                        nodes[(ny, nx)][0] = curdist + 1
+        visited.add((y, x))
         heapq.heappop(dist_heap)
         heapq.heapify(dist_heap)
 
@@ -82,7 +82,7 @@ def part2(path):
     for y in range(HEIGHT):
         for x in range(WIDTH):
             if grid[y, x] == 0:
-                startposs.append((x, y))
+                startposs.append((y, x))
 
     print(f"Starting Positions: {startposs}")
     print(sorted([find_path_dijkstra(grid, s, ENDPOS) for s in startposs])[0])
