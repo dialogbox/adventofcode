@@ -1,8 +1,26 @@
-import heapq
-import sys
+from __future__ import annotations
 import utils
 import numpy as np
-from functools import cache
+from collections import deque
+from dataclasses import dataclass
+
+
+@dataclass
+class Point:
+    coord: tuple[int, int]
+    parent: Point = None
+
+    def get_path(self: Point):
+        cur = self
+        result = []
+
+        while cur != None:
+            result.append(cur.coord)
+            cur = cur.parent
+
+        result.reverse()
+        return result
+
 
 HEIGHT = 0
 WIDTH = 0
@@ -36,53 +54,42 @@ def parse_input(path):
     return result
 
 
-def find_path_dijkstra(grid, startpos, endpos):
-    print(f"From: {startpos}, To: {endpos}")
-    dist_heap = [[0 if (y, x) == startpos else sys.maxsize, (y, x)]
-                 for x in range(WIDTH) for y in range(HEIGHT)]
+def find_path_bfs(grid, startpos, endpos):
+    queue = deque([Point(startpos)])
+    visited = np.full(grid.shape, fill_value=False)
+    visited[startpos] = True
 
-    nodes = dict(zip([n[1] for n in dist_heap], dist_heap))
+    while len(queue) > 0:
+        cur = queue.popleft()
+        if cur.coord == endpos:
+            return cur
 
-    visited = set()
-    path = []
-    heapq.heapify(dist_heap)
-
-    while len(dist_heap) > 0 and dist_heap[0][0] != sys.maxsize:
-        [curdist, (y, x)] = dist_heap[0]
-        path.append((y, x))
-        if (y, x) == endpos:
-            break
+        (y, x) = cur.coord
 
         for (ny, nx) in [(y, x - 1), (y, x + 1), (y - 1, x), (y + 1, x)]:
             if nx >= 0 and nx <= WIDTH - 1 and ny >= 0 and ny <= HEIGHT - 1:
-                if (ny, nx) not in visited and grid[ny, nx] <= grid[y, x] + 1:
-                    if nodes[(ny, nx)][0] > curdist + 1:
-                        nodes[(ny, nx)][0] = curdist + 1
-        visited.add((y, x))
-        heapq.heappop(dist_heap)
-        heapq.heapify(dist_heap)
+                if not visited[ny, nx] and grid[ny, nx] <= grid[y, x] + 1:
+                    queue.append(Point((ny, nx), cur))
+                    visited[ny, nx] = True
 
-    return nodes[endpos][0]
+    return False
 
 
 def part1(path):
     grid = parse_input(path)
 
-    print(STARTPOS, ENDPOS)
-    print(find_path_dijkstra(grid, STARTPOS, ENDPOS))
+    end_points = find_path_bfs(grid, STARTPOS, ENDPOS)
+
+    print(len(end_points.get_path()) - 1)
 
 
 def part2(path):
     grid = parse_input(path)
 
-    print(ENDPOS)
+    zeros = np.where(grid == 0)
+    startposs = list(zip(zeros[0], zeros[1]))
 
-    startposs = []
+    end_points = [find_path_bfs(grid, s, ENDPOS) for s in startposs]
+    steps = sorted([len(t.get_path()) for t in end_points if t])
 
-    for y in range(HEIGHT):
-        for x in range(WIDTH):
-            if grid[y, x] == 0:
-                startposs.append((y, x))
-
-    print(f"Starting Positions: {startposs}")
-    print(sorted([find_path_dijkstra(grid, s, ENDPOS) for s in startposs])[0])
+    print(steps[0] - 1)
