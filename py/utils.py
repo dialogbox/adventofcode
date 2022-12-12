@@ -16,6 +16,10 @@ def read_numbers_csv(filename):
     return [[int(i) for i in l] for l in lines]
 
 
+def read_grid(filename):
+    return [list(l) for l in read_lines(filename)]
+
+
 def read_number_grid(filename):
     lines = read_lines(filename)
     return [[int(n) for n in list(line)] for line in lines]
