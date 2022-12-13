@@ -1,3 +1,6 @@
+import itertools
+
+
 def read_lines(filename):
     f = open(filename, "r")
     lines = [line.strip() for line in f]
@@ -47,6 +50,12 @@ def read_number_lines(filename):
 def readall(filename):
     f = open(filename, "r")
     return f.read()
+
+
+def split_list_by_elem(l, delim):
+    return [
+        list(y) for x, y in itertools.groupby(l, lambda z: z == delim) if not x
+    ]
 
 
 def print_line_by_line(somelist):

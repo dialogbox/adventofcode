@@ -1,14 +1,10 @@
 import utils
 import functools
-import itertools
 
 
 def parse_input(path):
-    lines = utils.readall(path).split("\n")
-    pairs = [
-        list(y) for x, y in itertools.groupby(lines, lambda z: z == "")
-        if not x
-    ]
+    lines = utils.read_lines(path)
+    pairs = utils.split_list_by_elem(lines, "")
     data = [(eval(p1), eval(p2)) for [p1, p2] in pairs]
 
     return data
