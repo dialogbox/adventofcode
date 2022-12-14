@@ -58,6 +58,11 @@ def split_list_by_elem(l, delim):
     ]
 
 
+def parse_coord_str(str):
+    x, y = str.split(",")
+    return (int(x), int(y))
+
+
 def print_line_by_line(somelist):
     for l in somelist:
         print(l)
