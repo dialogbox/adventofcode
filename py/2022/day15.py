@@ -1,5 +1,5 @@
 import utils
-import numpy as np
+from utils import IntCoord, IntRange
 
 
 def parse_input(path):
@@ -11,121 +11,86 @@ def parse_input(path):
                               "").replace(" ", "").replace("x=", "").replace(
                                   "y=", "").split(":") for l in lines
     ]
-    sensors = [(utils.parse_coord_str(l[0]), utils.parse_coord_str(l[1]))
-               for l in lines]
+    sensors = [(IntCoord(l[0]), IntCoord(l[1])) for l in lines]
 
     return sensors
 
 
-def get_area(s, b):
-    (sx, sy) = s
-    (bx, by) = b
-
-    mdist = abs(sx - bx) + abs(sy - by)
-
-    return ((sx - mdist, sx + mdist), (sy - mdist, sy + mdist))
+def mdist(a, b):
+    return abs(a.x - b.x) + abs(a.y - b.y)
 
 
-def remove_duplicated_ranges(ranges):
-    if len(ranges) == 0:
+def yrange(s, b):
+    mdist = abs(s.x - b.x) + abs(s.y - b.y)
+    return IntRange(s.y - mdist, s.y + mdist)
+
+
+def covered_ranges(sensors, y):
+    matching_sensors = [(s, d) for s, (r, d) in sensors.items()
+                        if r.is_included(y)]
+
+    xranges = sorted([
+        IntRange(s.x - (d - abs(y - s.y)), s.x + (d - abs(y - s.y)))
+        for (s, d) in matching_sensors
+    ])
+
+    if len(xranges) == 0:
         return []
 
-    ranges.sort()
-
-    f, t = ranges[0]
-    result = [(f, t)]
-    for r in ranges:
-        if r[1] <= t:
-            continue
-
-        if r[0] <= t:
-            f = t + 1
-            t = r[1]
+    result = []
+    cur = xranges[0]
+    for r in xranges[1:]:
+        merged = cur.merge(r)
+        if len(merged) > 1:
+            result.append(merged[0])
+            cur = merged[1]
         else:
-            f, t = r
+            cur = merged[0]
 
-        result.append((f, t))
+    result.append(cur)
 
-    compact_result = []
-    f = result[0][0]
-    t = f - 1
-    for r in result:
-        if r[0] == t + 1:
-            t = r[1]
-        else:
-            compact_result.append((f, t))
-            f, t = r
-
-    compact_result.append((f, t))
-
-    return compact_result
-
-
-def count_safe_area(sensor_areas, y):
-    matching_sensors = [(s, a) for (s, a) in sensor_areas
-                        if a[1][0] <= y and a[1][1] >= y]
-
-    ranges = []
-
-    for (s, a) in matching_sensors:
-        mdist = a[0][1] - s[0]
-        ydist = abs(y - s[1])
-        xdist = mdist - ydist
-
-        ranges.append((s[0] - xdist, s[0] + xdist))
-
-    return ranges
-
-
-def num_beacons_in_ranges(sensors, ranges, y):
-    bxs = set([b[0] for (_, b) in sensors if b[1] == y])
-
-    n = 0
-    for x in bxs:
-        for rf, rt in ranges:
-            if x >= rf and x <= rt:
-                n += 1
-
-    return n
+    return result
 
 
 def part1test(path):
-    sensors = parse_input(path)
-    sensor_areas = [(s[0], get_area(s[0], s[1])) for s in sensors]
+    input_data = parse_input(path)
+    sensors = dict([(s, (yrange(s, b), mdist(s, b))) for (s, b) in input_data])
+    beacons = set([b for (_, b) in input_data])
 
-    ranges = count_safe_area(sensor_areas, 10)
+    ranges = covered_ranges(sensors, 10)
+    num_beacons = 0
+    for b in [b for b in beacons if b.y == 10]:
+        for r in ranges:
+            if r.is_included(b.x):
+                num_beacons += 1
 
-    ranges = remove_duplicated_ranges(ranges)
-
-    n_beacons_in_y = num_beacons_in_ranges(sensors, ranges, 10)
-    print(n_beacons_in_y)
-    print(ranges)
-    print(sum([r[1] - r[0] + 1 for r in ranges]) - n_beacons_in_y)
+    print(sum([len(r) for r in ranges]) - num_beacons)
 
 
 def part1(path):
-    sensors = parse_input(path)
-    sensor_areas = [(s[0], get_area(s[0], s[1])) for s in sensors]
+    input_data = parse_input(path)
+    sensors = dict([(s, (yrange(s, b), mdist(s, b))) for (s, b) in input_data])
+    beacons = set([b for (_, b) in input_data])
 
-    ranges = count_safe_area(sensor_areas, 2000000)
+    ranges = covered_ranges(sensors, 2000000)
+    num_beacons = 0
+    for b in [b for b in beacons if b.y == 2000000]:
+        for r in ranges:
+            if r.is_included(b.x):
+                num_beacons += 1
 
-    ranges = remove_duplicated_ranges(ranges)
-
-    n_beacons_in_y = num_beacons_in_ranges(sensors, ranges, 2000000)
-    print(n_beacons_in_y)
-    print(sum([r[1] - r[0] + 1 for r in ranges]) - n_beacons_in_y)
+    print(sum([len(r) for r in ranges]) - num_beacons)
 
 
 def part2(path):
-    sensors = parse_input(path)
-    sensor_areas = [(s[0], get_area(s[0], s[1])) for s in sensors]
+    input_data = parse_input(path)
+    sensors = dict([(s, (yrange(s, b), mdist(s, b))) for (s, b) in input_data])
 
     for y in range(4000000):
-        ranges = count_safe_area(sensor_areas, y)
-        ranges = remove_duplicated_ranges(ranges)
+        ranges = covered_ranges(sensors, y)
         if len(ranges) > 1:
-            for p in zip(ranges[:-1], ranges[1:]):
-                for x in range(p[0][1] + 1, p[1][0]):
+            for (p1, p2) in zip(ranges[:-1], ranges[1:]):
+                for x in range(p1.To + 1, p2.From):
                     if x >= 0 and x <= 4000000:
                         print((x, y), x * 4000000 + y)
             break
