@@ -1,5 +1,6 @@
 import utils
-from utils import IntCoord, IntRange
+from utils import Coord, Range
+import itertools
 
 
 def parse_input(path):
@@ -11,7 +12,7 @@ def parse_input(path):
                               "").replace(" ", "").replace("x=", "").replace(
                                   "y=", "").split(":") for l in lines
     ]
-    sensors = [(IntCoord(l[0]), IntCoord(l[1])) for l in lines]
+    sensors = [(Coord(l[0]), Coord(l[1])) for l in lines]
 
     return sensors
 
@@ -22,7 +23,7 @@ def mdist(a, b):
 
 def yrange(s, b):
     mdist = abs(s.x - b.x) + abs(s.y - b.y)
-    return IntRange(s.y - mdist, s.y + mdist)
+    return Range(s.y - mdist, s.y + mdist)
 
 
 def covered_ranges(sensors, y):
@@ -30,7 +31,7 @@ def covered_ranges(sensors, y):
                         if r.is_included(y)]
 
     xranges = sorted([
-        IntRange(s.x - (d - abs(y - s.y)), s.x + (d - abs(y - s.y)))
+        Range(s.x - (d - abs(y - s.y)), s.x + (d - abs(y - s.y)))
         for (s, d) in matching_sensors
     ])
 
@@ -94,3 +95,38 @@ def part2(path):
                     if x >= 0 and x <= 4000000:
                         print((x, y), x * 4000000 + y)
             break
+
+
+def part2new(path):
+    input_data = parse_input(path)
+    sensors = [(s, mdist(s, b)) for (s, b) in input_data]
+
+    pairs = [((s1, d1), (s2, d2))
+             for ((s1, d1), (s2, d2)) in itertools.combinations(sensors, 2)
+             if mdist(s1, s2) == d1 + d2 + 2]
+
+    if len(pairs) != 2:
+        print("Something wrong!")
+        return
+
+    eq = []
+    for ((s1, d1), (s2, d2)) in pairs:
+        points1 = [
+            Coord(s1.x - d1 - 1, s1.y),
+            Coord(s1.x + d1 + 1, s1.y),
+            Coord(s1.x, s1.y - d1 - 1),
+            Coord(s1.x, s1.y + d1 + 1),
+        ]
+        [(_, p1), (_, p2)] = sorted([(mdist(s2, p), p) for p in points1])[:2]
+        slope = (p2.y - p1.y) // (p2.x - p1.x)
+        b = p1.y - slope * p1.x
+        eq.append((-slope, b))
+
+    # solve simultaneous equations
+    # ax + by + p, cx + dy = q
+    # y = (aq - cp) / (ad - bc), x = (dp - bq) / (ad - bc)
+    [(a, p), (c, q)] = eq
+    y = (a * q - c * p) // (a - c)
+    x = (p - q) // (a - c)
+
+    print((x, y), x * 4000000 + y)
