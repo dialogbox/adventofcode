@@ -102,6 +102,34 @@ def part1(path):
 
 
 def part2(path):
-    global data
+    global data, valve_idx, path_map, dist_map
     data = parse_input(path)
-    None
+    nvalve = len(data)
+
+    closed = set([i for i in range(nvalve) if data[i][1] > 0])
+    path_map, dist_map = build_map(data, valve_idx)
+    remain = 26
+
+    possible_combinations = []
+    for i in range(len(closed)//2):
+        possible_combinations.extend(itertools.combinations(closed, i+1))
+
+
+    all_results = []
+    start_idx = valve_idx["AA"]
+    for c in possible_combinations:
+        my_valves = c
+        e_valves = tuple([i for i in closed if i not in c])
+
+        if len(my_valves) == 0 or len(e_valves) == 0:
+            print(my_valves, e_valves)
+            return
+
+        my_result = best_path(my_valves, remain, start_idx)
+        e_result = best_path(e_valves, remain, start_idx)
+
+        all_results.append((my_result[0] + e_result[0], my_result[1], e_result[1]))
+
+    all_results.sort(key=lambda x: -x[0])
+
+    print(all_results[0])
