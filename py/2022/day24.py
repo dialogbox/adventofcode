@@ -80,13 +80,16 @@ def create_grid_cache(grid):
     return [u | d | l | r for (u, d, l, r) in t]
 
 
-def shortest_path(grid):
+def shortest_path(grid, start_time, starty, startx, endy, endx):
     h, w = grid[0].shape
+
+    start_grid_idx = start_time % (h * w)
 
     grid_cache = create_grid_cache(grid)
 
-    search_queue = deque([((-1, 0, 0), [(-1, 0, 0)])])
-    visited = set([(-1, 0, 0)])
+    search_queue = deque([((starty, startx, start_grid_idx),
+                           [(starty, startx, start_grid_idx)])])
+    visited = set([(starty, startx, start_grid_idx)])
 
     while len(search_queue) > 0:
         ((y, x, grid_idx), path) = search_queue.popleft()
@@ -95,25 +98,29 @@ def shortest_path(grid):
         next_grid = grid_cache[next_grid_idx]
 
         # arrived
-        if (y, x) == (h - 1, w - 1):
-            return path + [(y + 1, x, next_grid_idx)]
+        if (y, x) == (endy, endx):
+            return (path + [(y + 1, x, next_grid_idx)])[1:]
 
         # if it's safe to stay at the current position
-        if not next_grid[y, x] and (y, x, next_grid_idx) not in visited:
-            search_queue.append(
-                ((y, x, next_grid_idx), path + [(y, x, next_grid_idx)]))
-            visited.add((y, x, next_grid_idx))
+        if (y, x, next_grid_idx) not in visited:
+            if y == -1 or y == h or not next_grid[y, x]:
+                search_queue.append(
+                    ((y, x, next_grid_idx), path + [(y, x, next_grid_idx)]))
+                visited.add((y, x, next_grid_idx))
 
-        if (y, x) == (-1, 0):
-            if not next_grid[0, 0] and (0, 0, next_grid_idx) not in visited:
-                search_queue.append(
-                    ((0, 0, next_grid_idx), path + [(0, 0, next_grid_idx)]))
-                visited.add((0, 0, next_grid_idx))
-            elif (-1, 0, next_grid_idx) not in visited:
-                search_queue.append(
-                    ((-1, 0, next_grid_idx), path + [(-1, 0, next_grid_idx)]))
-                visited.add((-1, 0, next_grid_idx))
+        if y == -1 or y == h:
+            next_y = 0 if y == -1 else h - 1
+            if not next_grid[next_y, x]:
+                search_queue.append(((next_y, x, next_grid_idx),
+                                     path + [(next_y, x, next_grid_idx)]))
+                visited.add((next_y, x, next_grid_idx))
         else:
+            # if it's safe to stay at the current position
+            if not next_grid[y, x] and (y, x, next_grid_idx) not in visited:
+                search_queue.append(
+                    ((y, x, next_grid_idx), path + [(y, x, next_grid_idx)]))
+                visited.add((y, x, next_grid_idx))
+
             if y > 0:
                 if not next_grid[y - 1, x] and (y - 1, x,
                                                 next_grid_idx) not in visited:
@@ -142,11 +149,29 @@ def shortest_path(grid):
 def part1(path):
     grid = parse_input(path)
 
-    path = shortest_path(grid)
+    path = shortest_path(grid, 0, -1, 0, grid[0].shape[0] - 1,
+                         grid[0].shape[1] - 1)
 
     print(len(path))
-    print(path)
 
-    # for i in range(100):
-    #     print_grid(n_steps(grid, i))
-    #     timemod.sleep(1)
+
+def part2(path):
+    grid = parse_input(path)
+
+    h, w = grid[0].shape
+
+    path = shortest_path(grid, 0, -1, 0, grid[0].shape[0] - 1,
+                         grid[0].shape[1] - 1)
+
+    ela_to_goal = len(path)
+
+    path2 = shortest_path(grid, ela_to_goal, h, w - 1, 0, 0)
+
+    ela_to_return_back = len(path2)
+
+    path3 = shortest_path(grid, ela_to_goal + ela_to_return_back, -1, 0,
+                          grid[0].shape[0] - 1, grid[0].shape[1] - 1)
+
+    ela_to_goal_again = len(path3)
+
+    print(ela_to_goal + ela_to_return_back + ela_to_goal_again)
