@@ -2,6 +2,7 @@ from __future__ import annotations
 import itertools
 import re
 import functools
+import numpy as np
 
 
 def read_lines(filename):
@@ -69,6 +70,16 @@ def parse_coord_str(str):
 def print_line_by_line(somelist):
     for l in somelist:
         print(l)
+
+
+def print_npgrid(grid, delim="", header=None, footer=None):
+    if header:
+        print(header)
+
+    print("\n".join([delim.join(l) for l in grid]))
+
+    if footer:
+        print(footer)
 
 
 @functools.total_ordering
