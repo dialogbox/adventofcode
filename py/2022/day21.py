@@ -1,6 +1,4 @@
 import utils
-import sys
-import resource
 
 
 def parse_input(path):
@@ -42,40 +40,58 @@ def compute(simple_monkeys, complex_monkeys, monkey):
     print(f"what?? {fomular}")
 
 
-def invert_fomular(complex_monkeys):
-    result = {}
-
-    for monkey, fomular in complex_monkeys.items():
-        if monkey == 'root':
-            continue
-
-        op1, op, op2 = fomular
-
-        if op == '+':
-            result[op1] = (monkey, '-', op2)
-            result[op2] = (monkey, '-', op1)
-        if op == '-':
-            result[op1] = (op2, '+', monkey)
-            result[op2] = (op1, '-', monkey)
-        if op == '/':
-            result[op1] = (op2, '*', monkey)
-            result[op2] = (op1, '/', monkey)
-        if op == '*':
-            result[op1] = (monkey, '/', op2)
-            result[op2] = (monkey, '/', op1)
-        
-    return result
-
-
 def part1(path):
     simple_monkeys, complex_monkeys = parse_input(path)
 
     print(compute(simple_monkeys, complex_monkeys, "root"))
 
+
+def find_human_value(simple_monkeys, complex_monkeys, root, value):
+
+    cur = root
+    cur_value = value
+
+    while True:
+        if cur in simple_monkeys:
+            raise KeyError(f"{cur} is a simple monkey")
+
+        if cur == "humn":
+            return cur_value
+
+        op1, op, op2 = complex_monkeys[cur]
+        op1_val = compute(simple_monkeys, complex_monkeys, op1)
+        op2_val = compute(simple_monkeys, complex_monkeys, op2)
+
+        next_cur = None
+        new_value = None
+        if op1_val == None:
+            next_cur = op1
+            if op == '+':
+                new_value = cur_value - op2_val
+            elif op == '-':
+                new_value = cur_value + op2_val
+            elif op == '*':
+                new_value = cur_value // op2_val
+            elif op == '/':
+                new_value = cur_value * op2_val
+        elif op2_val == None:
+            next_cur = op2
+            if op == '+':
+                new_value = cur_value - op1_val
+            elif op == '-':
+                new_value = op1_val - cur_value
+            elif op == '*':
+                new_value = cur_value // op1_val
+            elif op == '/':
+                new_value = op1_val // cur_value
+
+        cur = next_cur
+        cur_value = new_value
+
+
 def part2(path):
     simple_monkeys, complex_monkeys = parse_input(path)
 
-    inverted = invert_fomular(complex_monkeys)
     del simple_monkeys['humn']
 
     op1, _, op2 = complex_monkeys['root']
@@ -83,12 +99,15 @@ def part2(path):
     op1_val = compute(simple_monkeys, complex_monkeys, op1)
     op2_val = compute(simple_monkeys, complex_monkeys, op2)
 
-    simple_monkeys["_zero_"] = 0
+    root_monkey = None
+    root_value = None
     if op1_val == None:
-        simple_monkeys[op2] = op2_val
-        inverted[op1] = (op2, '+', '_zero_')
+        root_monkey = op1
+        root_value = op2_val
     elif op2_val == None:
-        simple_monkeys[op1] = op1_val
-        inverted[op2] = (op1, '+', '_zero_')
+        root_monkey = op2
+        root_value = op1_val
 
-    print(compute(simple_monkeys, inverted, "humn"))
+    print(
+        find_human_value(simple_monkeys, complex_monkeys, root_monkey,
+                         root_value))
