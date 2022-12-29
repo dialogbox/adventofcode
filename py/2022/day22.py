@@ -3,7 +3,7 @@ import numpy as np
 import re
 
 
-def parse_input(path):
+def parse_input_part1(path):
     lines = utils.readall(path).split('\n')
 
     w = max([len(l) for l in lines[:-2]])
@@ -101,7 +101,7 @@ def navigate(grid, startpos, instructions):
 
 
 def part1(path):
-    grid, instructions = parse_input(path)
+    grid, instructions = parse_input_part1(path)
 
     startpos = start_position(grid)
     y, x, dir = navigate(grid, startpos, instructions)
@@ -109,5 +109,32 @@ def part1(path):
     print(1000 * y + 4 * x + dir)
 
 
+def parse_input_part2(path):
+    lines = utils.readall(path).split('\n')
+
+    inst = re.split("([LR])", lines[-1])
+    inst = tuple([int(e) if e != 'R' and e != 'L' else e for e in inst])
+
+    w = min([len(l.strip()) for l in lines[:-2]])
+    data = [list(l) for l in lines[:-2]]
+
+    faces = []
+    for i in range(len(data) // w):
+        t = np.array(data[i * w:(i + 1) * w])
+        face_strip = []
+        for j in range(len(t[0]) // w):
+            face = t[:, j * w:(j + 1) * w]
+            if np.all(face == ' '):
+                face_strip.append(None)
+            else:
+                face_strip.append(face)
+        faces.append(face_strip)
+
+    return (faces, inst)
+
+
 def part2(path):
-    grid, instructions = parse_input(path)
+    faces, instructions = parse_input_part2(path)
+
+    print(faces)
+
